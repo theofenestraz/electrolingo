@@ -280,7 +280,11 @@ textarea.field { font: 600 1rem/1.45 var(--f-ui); min-height: 140px; resize: ver
 .tile[aria-pressed="true"] { border-color: var(--sel); background: var(--sel-bg); box-shadow: 0 4px 0 var(--sel); }
 .tile.done { opacity: .35; pointer-events: none; box-shadow: none; transform: translateY(4px); }
 .tile.shake { animation: shake .3s; border-color: var(--bad); }
-@keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+.tile.matched { border-color: var(--ok); background: var(--ok-bg); color: var(--ok-ink); box-shadow: 0 4px 0 var(--ok); pointer-events: none; animation: pop .35s ease-out; }
+.tile.miss { border-color: var(--bad); background: var(--bad-bg); color: var(--bad-ink); box-shadow: 0 4px 0 var(--bad); animation: shake .4s; }
+@keyframes shake { 20% { transform: translateX(-6px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
+@keyframes pop { 0% { transform: scale(1); } 45% { transform: scale(1.06); } 100% { transform: scale(1); } }
+.match-count { font: 800 .82rem var(--f-ui); color: var(--ink-3); }
 .order-slots { display: grid; gap: 10px; min-height: 64px; padding: 10px; border: 2px dashed var(--line); border-radius: 16px; }
 .order-slots .tile { display: flex; gap: 10px; align-items: center; }
 .order-slots .n { font: 900 .8rem var(--f-ui); color: var(--ink-3); width: 18px; flex: none; }
@@ -990,7 +994,7 @@ function itemHtml(it) {
       return `<div class="eyebrow">Calcula</div>` + qHtml(it) + `<div style="display:flex;gap:10px;align-items:center"><input class="field" id="ans" inputmode="decimal" autocomplete="off" placeholder="Resultado">${it.u ? `<span class="unit-lbl">${esc(it.u)}</span>` : ""}</div>`;
     case "match": {
       const L = shuffle(it.p.map((_, i) => i)), R = shuffle(it.p.map((_, i) => i));
-      return `<div class="eyebrow">Empareja</div><p class="q">${inline(it.q)}</p>
+      return `<div class="section-head"><div class="eyebrow">Empareja</div><span class="match-count" id="matchcount">0 de ${it.p.length} parejas</span></div><p class="q">${inline(it.q)}</p>
         <div class="match"><div class="col">${L.map(i => `<button class="tile" data-side="l" data-i="${i}">${inline(it.p[i][0])}</button>`).join("")}</div>
         <div class="col">${R.map(i => `<button class="tile" data-side="r" data-i="${i}">${inline(it.p[i][1])}</button>`).join("")}</div></div>`;
     }
@@ -1042,17 +1046,27 @@ function bindItem(it) {
     inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); checkTyped(it); } });
   }
   if (it.t === "match") {
-    let selL = null, selR = null, errs = 0, done = 0;
+    let selL = null, selR = null, errs = 0, done = 0, busy = false;
     const tiles = stage.querySelectorAll(".tile");
     const tryPair = () => {
       if (selL == null || selR == null) return;
       const bl = stage.querySelector(`.tile[data-side="l"][data-i="${selL}"]`), br = stage.querySelector(`.tile[data-side="r"][data-i="${selR}"]`);
-      if (selL === selR) { bl.classList.add("done"); br.classList.add("done"); done++; beep(true); }
-      else { errs++; [bl, br].forEach(x => { x.classList.remove("shake"); void x.offsetWidth; x.classList.add("shake"); }); beep(false); }
       bl.setAttribute("aria-pressed", "false"); br.setAttribute("aria-pressed", "false"); selL = selR = null;
+      if (bl.dataset.i === br.dataset.i) {
+        // pareja correcta: se queda en verde
+        [bl, br].forEach(x => { x.classList.add("matched"); x.setAttribute("aria-label", x.textContent + " (pareja correcta)"); });
+        done++; beep(true);
+        const c = $("#matchcount"); if (c) c.textContent = `${done} de ${it.p.length} parejas`;
+      } else {
+        // pareja incorrecta: rojo y temblor, y a los 0,8 s vuelve a la normalidad
+        errs++; busy = true; beep(false);
+        [bl, br].forEach(x => { x.classList.remove("miss"); void x.offsetWidth; x.classList.add("miss"); });
+        setTimeout(() => { [bl, br].forEach(x => x.classList.remove("miss")); busy = false; }, 800);
+      }
       if (done === it.p.length) answer(it, errs <= 1, { note: errs ? `${errs} fallo${errs > 1 ? "s" : ""} al emparejar` : "Sin fallos", silent: true });
     };
     tiles.forEach(b => b.addEventListener("click", () => {
+      if (busy || b.classList.contains("matched")) return;
       const side = b.dataset.side, i = +b.dataset.i;
       stage.querySelectorAll(`.tile[data-side="${side}"]`).forEach(x => x.setAttribute("aria-pressed", "false"));
       b.setAttribute("aria-pressed", "true");
