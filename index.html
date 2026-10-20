@@ -256,7 +256,16 @@ code, .code-font { font-family: var(--f-mono); }
 .rich code { font: .88em var(--f-mono); background: var(--surface-2); padding: 1px 5px; border-radius: 6px; border: 1px solid var(--line); }
 pre.code { margin: 0; font: .86rem/1.5 var(--f-mono); background: #1e2b32; color: #e7edf5; padding: 12px 14px; border-radius: 12px; overflow-x: auto; white-space: pre; }
 pre.code .k { color: #7cc7ff; } pre.code .s { color: #ffd479; } pre.code .c { color: #8a9ba5; font-style: italic; } pre.code .n { color: #9be3a0; }
+.bug .k { color: #7cc7ff; } .bug .s { color: #ffd479; } .bug .c { color: #8a9ba5; font-style: italic; } .bug .n { color: #9be3a0; }
 
+.bug { display: grid; background: #1e2b32; border-radius: 14px; padding: 8px 0; overflow-x: auto; }
+.bugline { display: flex; gap: 12px; align-items: baseline; border: 0; border-left: 4px solid transparent; background: none; color: #e7edf5; text-align: left; padding: 7px 12px 7px 8px; min-height: 40px; font: .9rem/1.45 var(--f-mono); white-space: pre; }
+.bugline .ln { color: #6f8591; min-width: 1.4em; text-align: right; flex: none; font-size: .78rem; }
+.bugline code { font: inherit; background: none; border: 0; padding: 0; }
+.bugline:active:not(:disabled) { background: rgb(255 255 255 / .08); }
+.bugline.right { background: rgb(88 204 2 / .22); border-left-color: var(--ok); }
+.bugline.wrong { background: rgb(255 75 75 / .22); border-left-color: var(--bad); animation: shake .4s; }
+.bugline:disabled { cursor: default; }
 .opts { display: grid; gap: 10px; }
 .opt { text-align: left; border: 2px solid var(--line); background: var(--surface); border-radius: 16px; padding: 13px 14px; display: flex; gap: 12px; align-items: center; min-height: 56px; font: 700 1rem var(--f-ui); box-shadow: 0 4px 0 var(--line); margin-bottom: 4px; color: var(--ink); }
 .opt:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 var(--line); }
@@ -345,7 +354,7 @@ const ICON = {
   info: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5" stroke-linecap="round"/></svg>',
   left: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
 };
-const EST = { tf: 20, mc: 30, flash: 22, fill: 40, num: 50, match: 60, order: 50, sort: 50, open: 120 };
+const EST = { tf: 20, mc: 30, flash: 22, fill: 40, num: 50, match: 60, order: 50, sort: 50, open: 120, bug: 40 };
 const LESSON_SECS = 40;
 
 /* ---------- texto enriquecido ---------- */
@@ -1012,6 +1021,11 @@ function itemHtml(it) {
           <div class="face"><p class="q">${inline(it.f)}</p></div>
           <div class="face back"><div class="rich">${rich(it.b)}</div></div>
         </div></div>`;
+    case "bug": {
+      const lines = it.code.split("\n");
+      return `<div class="eyebrow">Encuentra el error · toca la línea</div><p class="q">${inline(it.q)}</p>
+        <div class="bug" role="group" aria-label="Líneas del código">${lines.map((ln, i) => `<button class="bugline" data-l="${i}"><span class="ln">${i + 1}</span><code>${hlC(ln) || " "}</code></button>`).join("")}</div>`;
+    }
     case "open":
       return `<div class="eyebrow">Explícalo con tus palabras</div>` + qHtml(it) + `<textarea class="field" id="ans" placeholder="Escribe tu respuesta. No hace falta que sea perfecta."></textarea>`;
   }
@@ -1074,6 +1088,13 @@ function bindItem(it) {
       tryPair();
     }));
   }
+  if (it.t === "bug") stage.querySelectorAll(".bugline").forEach(b => b.addEventListener("click", () => {
+    if (S.answered) return;
+    const ok = +b.dataset.l === it.a;
+    stage.querySelectorAll(".bugline").forEach(x => { x.disabled = true; if (+x.dataset.l === it.a) x.classList.add("right"); });
+    if (!ok) b.classList.add("wrong");
+    answer(it, ok, ok ? {} : { extra: `<p>El error está en la línea <b>${it.a + 1}</b>.</p>` });
+  }));
   if (it.t === "order") drawOrder(it);
   if (it.t === "sort") drawSort(it);
   if (it.t === "flash") $("#flash").addEventListener("click", flipFlash);
