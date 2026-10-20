@@ -1292,7 +1292,7 @@ async function decryptBundle(b64, code) {
 const CODE_KEY = LS + "-codigo";
 function askCode(cipher, error) {
   root.innerHTML = `
-    <header class="top"><div class="brand"><b>Electrolingo</b><span>1º GIEIA</span></div></header>
+    <header class="top"><div class="brand"><span>Electrolingo</span><svg class="logo" viewBox="36 18 108 128" aria-hidden="true"><polygon fill="#f2b632" stroke="#d99a0f" stroke-width="3" stroke-linejoin="round" points="90,46 104.1,79.6 140.4,82.4 112.8,106.2 121.1,141.6 90,122.6 58.9,141.6 67.2,106.2 39.6,82.4 75.9,79.6"/><path class="cap" d="M68 50 L68 62 Q90 72 112 62 L112 50 Z" fill="#141b24"/><polygon class="cap" points="90,22 138,40 90,58 42,40" fill="#141b24"/><polygon points="90,26 129,40 90,54 51,40" fill="#232d3b"/><circle cx="90" cy="40" r="3.2" fill="#f2b632"/><path d="M90 40 L128 46 L128 66" fill="none" stroke="#f2b632" stroke-width="3" stroke-linecap="round"/><path d="M124 64 L132 64 L134 76 L122 76 Z" fill="#f2b632"/></svg></div></header>
     <form class="card" id="gate" style="margin-top:12vh">
       <div class="eyebrow">Acceso con código</div>
       <h1>Escribe el código para entrar</h1>
