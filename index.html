@@ -1,0 +1,1366 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>Electrolingo</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Electrolingo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Electrolingo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: una columna de móvil (máx. 560px) con barra de pestañas fija abajo, botones gruesos con sombra inferior y un camino de temas en zigzag por asignatura. */
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f7f7f7;
+  --ink: #3c3c3c;
+  --ink-2: #777777;
+  --ink-3: #afafaf;
+  --line: #e5e5e5;
+  --ok: #58cc02;
+  --ok-dark: #58a700;
+  --ok-bg: #d7ffb8;
+  --ok-ink: #58a700;
+  --bad: #ff4b4b;
+  --bad-dark: #ea2b2b;
+  --bad-bg: #ffdfe0;
+  --bad-ink: #ea2b2b;
+  --gold: #ffc800;
+  --gold-dark: #e5a500;
+  --flame: #ff9600;
+  --sel: #1cb0f6;
+  --sel-bg: #ddf4ff;
+  --inf: #1cb0f6;
+  --ing: #00c2a8;
+  --fis: #ff9600;
+  --mat: #ce82ff;
+  --eg: #ff86d0;
+  --f-ui: "Nunito", "Arial Rounded MT Bold", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131f24; --surface: #131f24; --surface-2: #202f36; --ink: #f1f7fb; --ink-2: #b7c3c9; --ink-3: #52656d;
+    --line: #37464f; --ok-bg: #1d3a12; --ok-ink: #79d634; --bad-bg: #3d1f22; --bad-ink: #ff7878; --sel-bg: #1b3a4b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131f24; --surface: #131f24; --surface-2: #202f36; --ink: #f1f7fb; --ink-2: #b7c3c9; --ink-3: #52656d;
+  --line: #37464f; --ok-bg: #1d3a12; --ok-ink: #79d634; --bad-bg: #3d1f22; --bad-ink: #ff7878; --sel-bg: #1b3a4b;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: var(--bg); color: var(--ink); font: 600 16px/1.45 var(--f-ui);
+  -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid var(--sel); outline-offset: 2px; }
+.app {
+  max-width: 560px; margin: 0 auto; min-height: 100%;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 8px 170px;
+  display: flex; flex-direction: column; gap: 18px;
+}
+h1, h2, h3 { font-family: var(--f-ui); font-weight: 900; text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: 1.7rem; }
+h2 { font-size: 1.25rem; }
+h3 { font-size: 1.05rem; font-weight: 800; }
+p { margin: 0; }
+.eyebrow { font: 800 .74rem/1.1 var(--f-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.muted { color: var(--ink-2); }
+.mono { font-variant-numeric: tabular-nums; }
+code, .code-font { font-family: var(--f-mono); }
+
+/* barra superior */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 15; background: var(--bg); display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-block: 10px; border-bottom: 2px solid var(--line); margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
+.brand { font: 900 1.35rem/1 var(--f-ui); color: var(--ok); letter-spacing: -.01em; display: flex; align-items: center; gap: 6px; }
+.brand .logo { width: 30px; height: 34px; flex: none; }
+.brand .logo .cap { stroke: var(--cap-line, none); stroke-width: 3; stroke-linejoin: round; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cap-line: #b7c3c9; } }
+:root[data-theme="dark"] { --cap-line: #b7c3c9; }
+.stats { display: flex; gap: 14px; align-items: center; }
+.stat-chip { display: inline-flex; align-items: center; gap: 5px; font: 900 1rem/1 var(--f-ui); color: var(--ink-3); }
+.stat-chip svg { width: 24px; height: 24px; }
+.stat-chip.flame { color: var(--flame); }
+.stat-chip.gold { color: var(--gold-dark); }
+.stat-chip.blue { color: var(--sel); }
+
+/* tarjetas */
+.card { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r); padding: 16px; display: grid; gap: 12px; }
+.section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.linkbtn { border: 0; background: none; color: var(--sel); font: 900 .9rem var(--f-ui); text-transform: uppercase; letter-spacing: .05em; padding: 4px; }
+
+/* botones gruesos */
+.btn {
+  --c: var(--ok); --cd: var(--ok-dark);
+  border: 0; border-radius: 16px; padding: 14px 18px; min-height: 52px; flex: 1;
+  background: var(--c); color: #fff; font: 900 1rem/1 var(--f-ui); letter-spacing: .06em; text-transform: uppercase;
+  box-shadow: 0 4px 0 var(--cd); transition: transform .06s, box-shadow .06s; margin-bottom: 4px;
+}
+.btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--cd); }
+.btn.sub { --cd: color-mix(in srgb, var(--c) 72%, #000); }
+.btn.secondary { background: var(--surface); color: var(--sel); border: 2px solid var(--line); box-shadow: 0 4px 0 var(--line); }
+.btn.ok { --c: var(--ok); --cd: var(--ok-dark); }
+.btn.bad { --c: var(--bad); --cd: var(--bad-dark); }
+.btn:disabled { --c: var(--line); --cd: var(--line); color: var(--ink-3); box-shadow: 0 4px 0 var(--line); }
+.mini {
+  --c: var(--sel); border: 2px solid var(--line); background: var(--surface); border-radius: 12px; padding: 8px 12px;
+  font: 800 .85rem var(--f-ui); color: var(--c); box-shadow: 0 3px 0 var(--line); margin-bottom: 3px;
+}
+.mini.primary { background: var(--c); color: #fff; border-color: transparent; box-shadow: 0 3px 0 color-mix(in srgb, var(--c) 72%, #000); }
+.back { border: 0; background: none; padding: 6px 0; font: 800 .95rem var(--f-ui); color: var(--ink-3); display: inline-flex; gap: 6px; align-items: center; }
+
+.badge { font: 800 .7rem/1 var(--f-ui); padding: 5px 8px; border-radius: 8px; background: var(--surface-2); color: var(--ink-2); letter-spacing: .03em; white-space: nowrap; text-transform: uppercase; }
+.badge.hot { background: var(--c, var(--sel)); color: #fff; }
+.badge.warn { background: var(--bad-bg); color: var(--bad-ink); }
+
+.bar { height: 14px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 99px; background: var(--c, var(--ok)); position: relative; transition: width .4s; }
+.bar i::after { content: ""; position: absolute; left: 8px; right: 8px; top: 3px; height: 4px; border-radius: 99px; background: rgb(255 255 255 / .3); }
+.bar.thin { height: 10px; }
+.bar.thin i::after { display: none; }
+
+/* pestañas inferiores */
+.tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--bg); border-top: 2px solid var(--line);
+  padding: 6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px)); }
+.tabbar-in { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.tab { border: 2px solid transparent; background: none; border-radius: 14px; padding: 6px 2px 4px; display: grid; justify-items: center; gap: 2px; font: 800 .72rem/1 var(--f-ui); color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; }
+.tab svg { width: 30px; height: 30px; }
+.tab[aria-current="page"] { border-color: color-mix(in srgb, var(--sel) 45%, transparent); background: var(--sel-bg); color: var(--sel); }
+
+/* inicio */
+.goal { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; }
+.ring { width: 92px; height: 92px; position: relative; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .num { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; font: 900 1.3rem/1 var(--f-ui); }
+.ring .num small { display: block; font: 800 .68rem var(--f-ui); color: var(--ink-3); margin-top: 2px; }
+.exam { --c: var(--sel); background: var(--c); color: #fff; border-radius: var(--r); padding: 16px; display: grid; gap: 12px; box-shadow: 0 4px 0 color-mix(in srgb, var(--c) 72%, #000); }
+.exam .eyebrow { color: rgb(255 255 255 / .8); }
+.exam-row { display: flex; gap: 14px; align-items: center; }
+.countdown { min-width: 64px; text-align: center; border-radius: 14px; padding: 8px 6px; background: rgb(255 255 255 / .22); }
+.countdown b { display: block; font: 900 1.7rem/1 var(--f-ui); }
+.countdown span { font: 800 .64rem/1 var(--f-ui); text-transform: uppercase; letter-spacing: .06em; }
+.exam .mini { background: #fff; color: var(--c); border-color: #fff; box-shadow: 0 3px 0 rgb(0 0 0 / .18); justify-self: start; }
+.exam-list { display: grid; gap: 4px; font-size: .9rem; }
+.exam-list div { display: flex; justify-content: space-between; gap: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pick { --c: var(--sel); display: inline-flex; align-items: center; gap: 8px; border: 2px solid var(--line); border-radius: 14px; background: var(--surface); padding: 8px 12px 8px 8px; font: 800 .92rem var(--f-ui); box-shadow: 0 3px 0 var(--line); margin-bottom: 3px; color: var(--ink); }
+.pick .ico { width: 30px; height: 30px; border-radius: 9px; background: var(--c); color: #fff; display: grid; place-items: center; }
+.pick .ico svg { width: 18px; height: 18px; }
+.pick[aria-pressed="true"] { border-color: var(--c); background: color-mix(in srgb, var(--c) 14%, var(--surface)); box-shadow: 0 3px 0 var(--c); }
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.seg button { border: 2px solid var(--line); background: var(--surface); border-radius: 14px; padding: 10px 4px; font: 900 .95rem var(--f-ui); color: var(--ink-2); box-shadow: 0 3px 0 var(--line); margin-bottom: 3px; }
+.seg button[aria-pressed="true"] { border-color: var(--sel); background: var(--sel-bg); color: var(--sel); box-shadow: 0 3px 0 var(--sel); }
+
+/* asignaturas */
+.subj-list { display: grid; gap: 14px; }
+.subj-card { --c: var(--sel); display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; align-items: center; width: 100%; text-align: left;
+  border: 2px solid var(--line); border-radius: 18px; background: var(--surface); padding: 14px; box-shadow: 0 4px 0 var(--line); margin-bottom: 4px; }
+.subj-card:active { transform: translateY(4px); box-shadow: 0 0 0 var(--line); }
+.subj-ico { width: 64px; height: 64px; border-radius: 18px; background: var(--c); color: #fff; display: grid; place-items: center; box-shadow: 0 4px 0 color-mix(in srgb, var(--c) 72%, #000); }
+.subj-ico svg { width: 34px; height: 34px; }
+.subj-card .body { display: grid; gap: 6px; min-width: 0; }
+.subj-card .meta { font-size: .85rem; color: var(--ink-2); }
+.subj-card .chev { color: var(--ink-3); }
+.subj-card .badges { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* camino de temas */
+.unit { --c: var(--sel); background: var(--c); color: #fff; border-radius: 18px; padding: 16px; display: grid; gap: 10px; box-shadow: 0 4px 0 color-mix(in srgb, var(--c) 72%, #000); }
+.unit .eyebrow { color: rgb(255 255 255 / .82); }
+.unit .back { color: rgb(255 255 255 / .9); padding: 0; }
+.unit-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.unit .mini { background: rgb(255 255 255 / .18); color: #fff; border-color: rgb(255 255 255 / .45); box-shadow: 0 3px 0 rgb(0 0 0 / .15); }
+.unit .mini.primary { background: #fff; color: var(--c); border-color: #fff; }
+.path { display: grid; justify-items: center; gap: 22px; padding-block: 18px 8px; overflow-x: clip; }
+.stop { display: grid; justify-items: center; gap: 8px; width: min(230px, 100%); }
+.node { --c: var(--sel); width: 74px; height: 70px; border-radius: 50%; border: 0; background: var(--c); color: #fff; display: grid; place-items: center;
+  box-shadow: 0 7px 0 color-mix(in srgb, var(--c) 70%, #000); position: relative; margin-bottom: 7px; }
+.node:active { transform: translateY(6px); box-shadow: 0 1px 0 color-mix(in srgb, var(--c) 70%, #000); }
+.node svg { width: 34px; height: 34px; }
+.node.new { opacity: .92; }
+.node.done { background: var(--gold); box-shadow: 0 7px 0 var(--gold-dark); }
+.node.next { outline: 6px solid color-mix(in srgb, var(--c) 30%, transparent); outline-offset: 5px; }
+.node .ring-pct { position: absolute; inset: -10px; pointer-events: none; }
+.stop .label { font: 800 .86rem/1.2 var(--f-ui); text-align: center; max-width: 100%; color: var(--ink); }
+.stop .label small { display: block; font-weight: 700; color: var(--ink-3); }
+.bubble { --c: var(--sel); background: var(--surface); color: var(--c); border: 2px solid var(--line); border-radius: 12px; padding: 6px 10px; font: 900 .8rem var(--f-ui); text-transform: uppercase; letter-spacing: .05em; position: relative; animation: bob 1.6s ease-in-out infinite; }
+.bubble::after { content: ""; position: absolute; left: 50%; bottom: -8px; width: 12px; height: 12px; background: var(--surface); border-right: 2px solid var(--line); border-bottom: 2px solid var(--line); transform: translateX(-50%) rotate(45deg); }
+@keyframes bob { 50% { transform: translateY(-4px); } }
+
+/* hoja inferior */
+.sheet-back { position: fixed; inset: 0; z-index: 40; background: rgb(0 0 0 / .45); display: grid; align-items: end; }
+.sheet { --c: var(--sel); background: var(--surface); border-radius: 22px 22px 0 0; border-top: 6px solid var(--c); max-width: 560px; width: 100%; margin: 0 auto; display: grid; gap: 14px;
+  padding: 18px max(18px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); max-height: 85vh; overflow: auto; }
+.sheet .btns { display: grid; gap: 10px; }
+
+/* progreso y ajustes */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tile-stat { border: 2px solid var(--line); border-radius: var(--r); padding: 12px; display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; }
+.tile-stat svg { width: 30px; height: 30px; }
+.tile-stat b { display: block; font: 900 1.25rem/1.1 var(--f-ui); }
+.tile-stat span { font-size: .8rem; color: var(--ink-3); font-weight: 800; }
+.sub-row { --c: var(--sel); display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; }
+.sub-row .subj-ico { width: 40px; height: 40px; border-radius: 12px; box-shadow: 0 3px 0 color-mix(in srgb, var(--c) 72%, #000); }
+.sub-row .subj-ico svg { width: 22px; height: 22px; }
+.week svg { width: 100%; height: 130px; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .82rem; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; background: var(--sc); }
+.setting { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 6px; }
+.setting + .setting { border-top: 2px solid var(--line); padding-top: 14px; }
+.switch { width: 56px; height: 32px; border-radius: 99px; border: 0; background: var(--line); position: relative; flex: none; }
+.switch::after { content: ""; position: absolute; top: 4px; left: 4px; width: 24px; height: 24px; border-radius: 50%; background: #fff; transition: left .15s; box-shadow: 0 2px 0 rgb(0 0 0 / .15); }
+.switch[aria-checked="true"] { background: var(--ok); }
+.switch[aria-checked="true"]::after { left: 28px; }
+.foot { font-size: .8rem; color: var(--ink-3); display: grid; gap: 4px; text-align: center; }
+
+/* barra de acción de sesión */
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--bg); border-top: 2px solid var(--line);
+  padding: 14px max(16px, env(safe-area-inset-right, 0px)) calc(14px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+.dock-in { max-width: 560px; margin: 0 auto; display: flex; gap: 10px; flex-wrap: wrap; }
+.dock.fb-ok { background: var(--ok-bg); border-top-color: transparent; }
+.dock.fb-bad { background: var(--bad-bg); border-top-color: transparent; }
+.dock .feedback { flex-basis: 100%; display: grid; gap: 8px; max-height: 46vh; overflow: auto; }
+.feedback h3 { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; }
+.feedback .fb-ico { width: 34px; height: 34px; border-radius: 50%; background: #fff; display: grid; place-items: center; flex: none; }
+.feedback .fb-ico svg { width: 20px; height: 20px; }
+.dock.fb-ok .feedback, .dock.fb-ok h3 { color: var(--ok-ink); }
+.dock.fb-bad .feedback, .dock.fb-bad h3 { color: var(--bad-ink); }
+.feedback .rich, .feedback p { color: var(--ink); font-weight: 600; }
+.feedback .model { background: var(--surface); border-radius: 12px; padding: 10px; font-size: .92rem; color: var(--ink); }
+.feedback.neutral h3 { color: var(--ink); }
+
+/* sesión */
+.sess-top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); padding-block: 12px 6px; display: grid; gap: 8px; }
+.sess-bar { display: flex; gap: 14px; align-items: center; }
+.x { width: 36px; height: 36px; border: 0; background: none; color: var(--ink-3); display: grid; place-items: center; flex: none; padding: 0; }
+.x svg { width: 26px; height: 26px; }
+.prog { flex: 1; height: 16px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.prog i { display: block; height: 100%; background: var(--sc, var(--ok)); border-radius: 99px; transition: width .35s; position: relative; }
+.prog i::after { content: ""; position: absolute; left: 8px; right: 8px; top: 4px; height: 4px; border-radius: 99px; background: rgb(255 255 255 / .3); }
+.timer { font: 900 .95rem var(--f-ui); color: var(--ink-3); min-width: 46px; text-align: right; font-variant-numeric: tabular-nums; }
+.phase { display: flex; gap: 8px; align-items: center; font: 800 .82rem var(--f-ui); color: var(--sc); text-transform: uppercase; letter-spacing: .05em; }
+.phase .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sc); }
+.phase .muted { text-transform: none; letter-spacing: 0; }
+
+.q { font: 900 1.35rem/1.3 var(--f-ui); }
+.stage { display: grid; gap: 16px; }
+.lesson { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r); padding: 18px; display: grid; gap: 12px; box-shadow: 0 4px 0 var(--line); }
+.lesson h2 { font-size: 1.35rem; color: var(--sc, var(--ink)); }
+.rich { display: grid; gap: 10px; font-size: 1.04rem; font-weight: 600; }
+.rich strong { font-weight: 900; }
+.rich ul, .rich ol { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+.rich code { font: .88em var(--f-mono); background: var(--surface-2); padding: 1px 5px; border-radius: 6px; border: 1px solid var(--line); }
+pre.code { margin: 0; font: .86rem/1.5 var(--f-mono); background: #1e2b32; color: #e7edf5; padding: 12px 14px; border-radius: 12px; overflow-x: auto; white-space: pre; }
+pre.code .k { color: #7cc7ff; } pre.code .s { color: #ffd479; } pre.code .c { color: #8a9ba5; font-style: italic; } pre.code .n { color: #9be3a0; }
+
+.opts { display: grid; gap: 10px; }
+.opt { text-align: left; border: 2px solid var(--line); background: var(--surface); border-radius: 16px; padding: 13px 14px; display: flex; gap: 12px; align-items: center; min-height: 56px; font: 700 1rem var(--f-ui); box-shadow: 0 4px 0 var(--line); margin-bottom: 4px; color: var(--ink); }
+.opt:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 var(--line); }
+.opt .key { font: 900 .8rem var(--f-ui); width: 28px; height: 28px; border-radius: 8px; border: 2px solid var(--line); color: var(--ink-3); display: grid; place-items: center; flex: none; }
+.opt[aria-pressed="true"] { border-color: var(--sel); background: var(--sel-bg); box-shadow: 0 4px 0 var(--sel); }
+.opt.right { border-color: var(--ok); background: var(--ok-bg); box-shadow: 0 4px 0 var(--ok); color: var(--ok-ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); box-shadow: 0 4px 0 var(--bad); color: var(--bad-ink); }
+.opt.right .key { border-color: var(--ok); color: var(--ok-ink); } .opt.wrong .key { border-color: var(--bad); color: var(--bad-ink); }
+.opt:disabled { cursor: default; }
+.tf { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tf .opt { justify-content: center; font: 900 1.05rem var(--f-ui); }
+
+.field { width: 100%; font: 700 1.1rem var(--f-ui); padding: 14px; border-radius: 16px; border: 2px solid var(--line); background: var(--surface-2); color: var(--ink); }
+textarea.field { font: 600 1rem/1.45 var(--f-ui); min-height: 140px; resize: vertical; }
+.field.right { border-color: var(--ok); background: var(--ok-bg); } .field.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.unit-lbl { font: 800 .9rem var(--f-ui); color: var(--ink-3); }
+
+.match { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.match .col { display: grid; gap: 10px; align-content: start; }
+.tile { border: 2px solid var(--line); background: var(--surface); border-radius: 14px; padding: 10px; font: 700 .92rem/1.3 var(--f-ui); text-align: left; min-height: 56px; box-shadow: 0 4px 0 var(--line); margin-bottom: 4px; color: var(--ink); }
+.tile[aria-pressed="true"] { border-color: var(--sel); background: var(--sel-bg); box-shadow: 0 4px 0 var(--sel); }
+.tile.done { opacity: .35; pointer-events: none; box-shadow: none; transform: translateY(4px); }
+.tile.shake { animation: shake .3s; border-color: var(--bad); }
+@keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+.order-slots { display: grid; gap: 10px; min-height: 64px; padding: 10px; border: 2px dashed var(--line); border-radius: 16px; }
+.order-slots .tile { display: flex; gap: 10px; align-items: center; }
+.order-slots .n { font: 900 .8rem var(--f-ui); color: var(--ink-3); width: 18px; flex: none; }
+.order-pool { display: grid; gap: 10px; }
+.tile.right { border-color: var(--ok); background: var(--ok-bg); box-shadow: 0 4px 0 var(--ok); }
+.tile.wrong { border-color: var(--bad); background: var(--bad-bg); box-shadow: 0 4px 0 var(--bad); }
+.sort-card { text-align: center; font: 900 1.2rem var(--f-ui); padding: 28px 16px; border-radius: var(--r); background: var(--surface); border: 2px solid var(--sc, var(--line)); box-shadow: 0 4px 0 var(--sc, var(--line)); }
+.sort-count { text-align: center; font: 800 .82rem var(--f-ui); color: var(--ink-3); }
+.sort-cats { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+
+.flash { perspective: 900px; }
+.flash-in { position: relative; min-height: 230px; transition: transform .45s; transform-style: preserve-3d; }
+.flash.flipped .flash-in { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--r); padding: 20px; display: grid; place-items: center; text-align: center; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 4px 0 var(--line); }
+.face.back { transform: rotateY(180deg); border-color: var(--sc); box-shadow: 0 4px 0 var(--sc); }
+.face .q { font-size: 1.15rem; }
+.grade3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; flex: 1; }
+.grade3 .btn { padding: 13px 4px; font-size: .82rem; }
+
+.end-hero { text-align: center; display: grid; gap: 8px; padding-block: 30px 6px; justify-items: center; }
+.end-hero .burst { width: 110px; height: 110px; }
+.end-hero h1 { font-size: 1.9rem; color: var(--gold-dark); }
+.stats3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stat { --c: var(--gold); border: 2px solid var(--c); border-radius: 14px; overflow: hidden; text-align: center; }
+.stat span { display: block; background: var(--c); color: #fff; font: 900 .7rem var(--f-ui); text-transform: uppercase; letter-spacing: .05em; padding: 5px 2px; }
+.stat b { display: block; font: 900 1.35rem/1.1 var(--f-ui); padding: 12px 4px; color: var(--c); }
+.miss { padding: 10px 0; border-top: 2px solid var(--line); display: grid; gap: 4px; font-size: .92rem; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(100px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 14px; font-weight: 800; font-size: .9rem; z-index: 50; max-width: calc(100% - 32px); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div id="root" class="app">
+  <p class="muted" style="text-align:center;margin-top:30vh">Cargando Electrolingo…</p>
+</div>
+<div id="dock" class="dock" hidden><div class="dock-in" id="dock-in"></div></div>
+<nav id="tabbar" class="tabbar" hidden aria-label="Secciones"><div class="tabbar-in" id="tabbar-in"></div></nav>
+
+<script>
+(() => {
+"use strict";
+
+/* ---------- utilidades ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const dayNum = (d = new Date()) => Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
+const dayKey = n => { const d = new Date(n * 864e5); return d.toISOString().slice(0, 10); };
+const TODAY = () => dayNum();
+const WD = ["D", "L", "M", "X", "J", "V", "S"];
+const MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+const norm = s => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim();
+const ICON = {
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>',
+  wave: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M2 17h5V7h5v10h5V7h5"/></svg>',
+  x: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  info: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5" stroke-linecap="round"/></svg>',
+  left: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+};
+const EST = { tf: 20, mc: 30, flash: 22, fill: 40, num: 50, match: 60, order: 50, sort: 50, open: 120 };
+const LESSON_SECS = 40;
+
+/* ---------- texto enriquecido ---------- */
+function hlC(code) {
+  const kw = /\b(int|float|double|char|short|long|unsigned|void|return|if|else|switch|case|break|default|for|while|do|continue|include|define|FILE|const|struct)\b/g;
+  return esc(code).replace(/(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|(&quot;.*?&quot;|&#39;.*?&#39;)|\b(\d+(?:\.\d+)?f?)\b|(#\w+)/g, (m, c, s, n, d) => {
+    if (c) return `<span class="c">${c}</span>`;
+    if (s) return `<span class="s">${s}</span>`;
+    if (n) return `<span class="n">${n}</span>`;
+    if (d) return `<span class="k">${d}</span>`;
+    return m;
+  }).replace(/(<span[^>]*>.*?<\/span>)|\b(int|float|double|char|short|long|unsigned|void|return|if|else|switch|case|break|default|for|while|do|continue|FILE|const|struct)\b/g, (m, sp, k) => sp ? sp : `<span class="k">${k}</span>`);
+}
+function inline(s) {
+  return esc(s).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+}
+function rich(src) {
+  if (!src) return "";
+  const parts = String(src).split(/```[a-z]*\n?/);
+  let out = "";
+  parts.forEach((p, i) => {
+    if (i % 2) { out += `<pre class="code">${hlC(p.replace(/\n$/, ""))}</pre>`; return; }
+    const lines = p.split("\n");
+    let buf = [], list = null;
+    const flushP = () => { if (buf.length) { out += `<p>${buf.map(inline).join("<br>")}</p>`; buf = []; } };
+    const flushL = () => { if (list) { out += `<${list.t}>${list.items.map(x => `<li>${inline(x)}</li>`).join("")}</${list.t}>`; list = null; } };
+    for (const ln of lines) {
+      const ul = ln.match(/^\s*- (.*)$/), ol = ln.match(/^\s*\d+\. (.*)$/);
+      if (ul || ol) { flushP(); const t = ul ? "ul" : "ol"; if (!list || list.t !== t) { flushL(); list = { t, items: [] }; } list.items.push((ul || ol)[1]); continue; }
+      if (!ln.trim()) { flushP(); flushL(); continue; }
+      flushL(); buf.push(ln);
+    }
+    flushP(); flushL();
+  });
+  return out;
+}
+function codeBlock(c) { return c ? `<pre class="code">${hlC(c)}</pre>` : ""; }
+
+let mjLoading = null;
+function typeset(el) {
+  if (!el || !/\$[^$]+\$/.test(el.textContent)) return;
+  if (!mjLoading) {
+    window.MathJax = { tex: { inlineMath: [["$", "$"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" }, startup: { typeset: false } };
+    mjLoading = new Promise(res => {
+      const s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js";
+      s.onload = () => (window.MathJax.startup?.promise || Promise.resolve()).then(res);
+      s.onerror = () => res();
+      document.head.appendChild(s);
+    });
+  }
+  mjLoading.then(() => window.MathJax?.typesetPromise?.([el]).catch(() => {}));
+}
+
+/* ---------- sonido ---------- */
+let actx = null;
+function beep(ok) {
+  if (!state.p.settings.sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const notes = ok ? [660, 880] : [220, 175];
+    notes.forEach((f, i) => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = ok ? "triangle" : "square"; o.frequency.value = f;
+      const t = actx.currentTime + i * 0.09;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(ok ? 0.12 : 0.05, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+      o.connect(g).connect(actx.destination); o.start(t); o.stop(t + 0.18);
+    });
+  } catch (e) { /* sin audio */ }
+}
+
+/* ---------- estado y guardado ---------- */
+const LS = "pulso-gieia-v1";
+const state = {
+  bundle: null, subj: {}, items: {}, p: null, srs: {}, db: null, uid: null, sample: undefined,
+  sync: "local", selected: new Set(), minutes: 25, view: "home", session: null, dirty: new Set(),
+};
+function freshProgress() {
+  return { updated: 0, xp: 0, streak: 0, best: 0, lastDay: null, freezes: 0, days: {}, seen: {}, sxp: {}, settings: { sound: true, minutes: 25 } };
+}
+function lsRead() { try { return JSON.parse(localStorage.getItem(LS) || "null"); } catch (e) { return null; } }
+function lsWrite() { try { localStorage.setItem(LS, JSON.stringify({ p: state.p, srs: state.srs })); } catch (e) { /* lleno o bloqueado */ } }
+let saveTimer = null;
+function touch(which) {
+  const now = Date.now();
+  if (which === "p") state.p.updated = now; else state.srs[which].updated = now;
+  state.dirty.add(which);
+  lsWrite();
+  clearTimeout(saveTimer); saveTimer = setTimeout(flush, 3000);
+}
+let flushing = false;
+async function flush() {
+  if (!state.db || !state.uid || flushing) return;
+  flushing = true;
+  try {
+    const list = [...state.dirty]; state.dirty.clear();
+    for (const w of list) {
+      const path = `data/users/${state.uid}/` + (w === "p" ? "progress" : "srs-" + w);
+      const data = w === "p" ? state.p : state.srs[w];
+      try { await state.db.doc(path).set(JSON.parse(JSON.stringify(data))); }
+      catch (e) { state.dirty.add(w); if (e && e.code === "invalid_argument") { state.sync = "local"; state.db = null; } }
+    }
+  } finally { flushing = false; }
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") { if (state.session) saveSessionLocal(); flush(); } });
+
+async function connectCloud() {
+  if (!window.claude?.use) return;
+  try {
+    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!db || !user) return;
+    state.isOwner = await user.isOwner().catch(() => false);
+    if (!state.isOwner && state.view === "home") render();
+    // quien entra por enlace público no puede escribir: su progreso se queda en su navegador
+    if ((await user.can("data.write").catch(() => null)) === false) return;
+    const uid = await user.id();
+    if (!uid) return;
+    state.db = db; state.uid = uid;
+    const base = `data/users/${uid}/`;
+    const pd = await db.doc(base + "progress").get();
+    if (pd.exists && (pd.data().updated || 0) >= (state.p.updated || 0)) state.p = mergeProgress(structuredClone(pd.data()));
+    else if (state.p.updated) state.dirty.add("p");
+    for (const s of state.bundle.subjects) {
+      const d = await db.doc(base + "srs-" + s.id).get();
+      const local = state.srs[s.id];
+      if (d.exists && (d.data().updated || 0) >= (local.updated || 0)) state.srs[s.id] = Object.assign({ updated: 0, items: {} }, structuredClone(d.data()));
+      else if (local.updated) state.dirty.add(s.id);
+    }
+    state.sync = "cloud";
+    lsWrite();
+    if (state.dirty.size) flush();
+    if (state.view === "home") render();
+  } catch (e) { state.sync = "local"; }
+}
+function mergeProgress(p) { const f = freshProgress(); return Object.assign(f, p, { settings: Object.assign(f.settings, p.settings || {}) }); }
+
+/* ---------- datos derivados ---------- */
+function examsFor(sid) {
+  const now = Date.now();
+  return (state.bundle.exams || []).filter(e => e.subject === sid && new Date(e.date).getTime() > now - 3 * 3600e3);
+}
+function examDays(e) { return dayNum(new Date(e.date)) - TODAY(); }
+function nextExam(sid) { const l = examsFor(sid); return l.length ? l[0] : null; }
+function srsOf(sid) { return state.srs[sid].items; }
+function dueItems(sid) {
+  const st = srsOf(sid), t = TODAY();
+  return Object.keys(st).filter(id => state.items[id] && st[id][0] <= t);
+}
+function topicMastery(sid, tp) {
+  const st = srsOf(sid); if (!tp.items.length) return 0;
+  let m = 0; for (const it of tp.items) { const s = st[it.id]; if (s) m += s[3] >= 2 ? 1 : s[3] >= 1 ? 0.5 : 0.15; }
+  return m / tp.items.length;
+}
+function subjectMastery(s) {
+  const n = s.topics.reduce((a, t) => a + t.items.length, 0) || 1;
+  return s.topics.reduce((a, t) => a + topicMastery(s.id, t) * t.items.length, 0) / n;
+}
+function lastStudied(sid) {
+  const keys = Object.keys(state.p.days).filter(k => (state.p.days[k].s || {})[sid] > 0).sort();
+  return keys.length ? dayNum(new Date(keys[keys.length - 1] + "T12:00:00")) : null;
+}
+function nextTopic(s) { return s.topics.find(t => !state.p.seen[t.id]) || null; }
+function priority(s) {
+  const due = dueItems(s.id).length;
+  const ls = lastStudied(s.id); const stale = ls == null ? 6 : TODAY() - ls;
+  const ex = nextExam(s.id); const ed = ex ? examDays(ex) : null;
+  let score = due * 0.5 + Math.min(stale, 10) * 1.5 + (nextTopic(s) ? 2 : 0);
+  if (ed != null && ed <= 21) score += (22 - Math.max(ed, 0)) * 2.2;
+  return score;
+}
+function displayStreak() {
+  const p = state.p, t = TODAY();
+  if (p.lastDay == null) return { n: 0, risk: false };
+  if (p.lastDay >= t - 1) return { n: p.streak, risk: p.lastDay === t - 1 };
+  if (p.lastDay === t - 2 && p.freezes > 0) return { n: p.streak, risk: true, freeze: true };
+  return { n: 0, risk: false };
+}
+function todayLog() { const k = dayKey(TODAY()); return state.p.days[k] || (state.p.days[k] = { m: 0, x: 0, n: 0, c: 0, s: {} }); }
+function level(xp) { return Math.floor(Math.sqrt((xp || 0) / 60)) + 1; }
+
+/* ---------- repetición espaciada ---------- */
+function schedule(sid, id, q) {
+  const st = srsOf(sid), t = TODAY();
+  let [d, i, e, r, l] = st[id] || [t, 0, 250, 0, 0];
+  if (q < 3) { r = 0; l++; e = Math.max(130, e - 20); i = 0; d = t + 1; }
+  else {
+    i = r === 0 ? 1 : r === 1 ? 3 : Math.round(i * e / 100);
+    if (q === 3) { e = Math.max(130, e - 15); i = Math.max(1, Math.round(i * 0.7)); }
+    if (q === 5) { e += 15; i = Math.round(i * 1.4) + 1; }
+    r++; d = t + i;
+    const ex = nextExam(sid);
+    if (ex) { const exd = dayNum(new Date(ex.date)); if (exd - 1 > t && d >= exd) d = exd - 1; }
+  }
+  st[id] = [d, i, e, r, l, t];
+  touch(sid);
+}
+
+/* ---------- registro de actividad ---------- */
+function logTime(sid, secs) {
+  const L = todayLog(); L.m += secs; L.s[sid] = (L.s[sid] || 0) + secs;
+}
+function addXp(sid, n) {
+  state.p.xp += n; state.p.sxp[sid] = (state.p.sxp[sid] || 0) + n; todayLog().x += n;
+}
+function markStudyDay() {
+  const p = state.p, t = TODAY();
+  if (p.lastDay === t) return false;
+  if (p.lastDay === t - 1) p.streak++;
+  else if (p.lastDay === t - 2 && p.freezes > 0) { p.freezes--; p.streak++; const y = dayKey(t - 1); p.days[y] = Object.assign(p.days[y] || { m: 0, x: 0, n: 0, c: 0, s: {} }, { f: 1 }); }
+  else p.streak = 1;
+  p.lastDay = t; p.best = Math.max(p.best, p.streak);
+  if (p.streak % 7 === 0) p.freezes = Math.min(2, p.freezes + 1);
+  return true;
+}
+
+/* ---------- construcción de la sesión ---------- */
+function est(it) { return EST[it.t] || 40; }
+function pickWeighted(pool) {
+  const tot = pool.reduce((a, x) => a + x.w, 0); let r = Math.random() * tot;
+  for (let k = 0; k < pool.length; k++) { r -= pool[k].w; if (r <= 0) return k; }
+  return pool.length - 1;
+}
+function planSubject(s, secs, opts = {}) {
+  const steps = []; let t = 0; const used = new Set(); const st = srsOf(s.id); const today = TODAY();
+  const seen = s.topics.filter(tp => state.p.seen[tp.id]);
+  const push = (it, phase) => { steps.push({ k: "item", phase, sid: s.id, id: it.id }); used.add(it.id); t += est(it); };
+  const res = opts.reserved || new Set();
+
+  if (opts.topic) {
+    const tp = s.topics.find(x => x.id === opts.topic);
+    tp.lesson.forEach((ls, i) => { steps.push({ k: "lesson", phase: "lesson", sid: s.id, tid: tp.id, i }); t += LESSON_SECS; });
+    for (const it of shuffle(tp.items)) push(it, "practice");
+    return { steps, used };
+  }
+  // 1. repasos que tocan hoy
+  const due = dueItems(s.id).sort((a, b) => st[a][0] - st[b][0] || st[b][4] - st[a][4]);
+  const revCap = secs * (opts.exam ? 0.5 : 0.35);
+  for (const id of due) { if (res.has(id)) continue; const it = state.items[id]; if (t + est(it) > revCap) break; push(it, "review"); }
+  // 2. lección nueva
+  let newTp = null;
+  if (!opts.exam) {
+    const nt = nextTopic(s);
+    if (nt) {
+      const cost = nt.lesson.length * LESSON_SECS + 150;
+      if (secs - t > cost || !seen.length) {
+        newTp = nt;
+        nt.lesson.forEach((ls, i) => { steps.push({ k: "lesson", phase: "lesson", sid: s.id, tid: nt.id, i }); t += LESSON_SECS; });
+        const firsts = shuffle(nt.items.filter(x => !st[x.id] && !res.has(x.id))).sort((a, b) => est(a) - est(b)).slice(0, 5);
+        for (const it of shuffle(firsts)) push(it, "practice");
+      }
+    }
+  }
+  // 3. práctica variada: lo nuevo y lo flojo pesa más
+  const topics = opts.exam ? s.topics : seen.concat(newTp ? [newTp] : []);
+  const pool = [];
+  for (const tp of topics) for (const it of tp.items) {
+    if (used.has(it.id) || res.has(it.id)) continue;
+    const x = st[it.id];
+    const w = !x ? 2 : x[4] > 0 && x[3] < 2 ? 3.2 : x[2] < 220 ? 2.4 : x[0] <= today ? 2 : 0.6;
+    pool.push({ it, w });
+  }
+  const limit = secs * 0.86;
+  while (t < limit && pool.length) { const k = pickWeighted(pool); const { it } = pool.splice(k, 1)[0]; push(it, "practice"); }
+  return { steps, used, topics: topics.map(x => x.id) };
+}
+function buildSession({ sids, minutes, exam = false, topic = null }) {
+  const subs = sids.map(id => state.subj[id]);
+  const total = minutes * 60;
+  let alloc;
+  if (subs.length === 1) alloc = [total];
+  else {
+    const w = subs.map(s => 1 + priority(s) / 10); const sw = w.reduce((a, b) => a + b, 0);
+    const minEach = Math.min(300, total / subs.length);
+    alloc = w.map(x => Math.max(minEach, (x / sw) * total));
+    const k = total / alloc.reduce((a, b) => a + b, 0); alloc = alloc.map(x => x * k);
+  }
+  const testSecs = topic ? 0 : Math.min(180, total * 0.12);
+  // el mini test se reserva antes de planificar, para que la práctica no lo agote
+  const test = [], reserved = new Set();
+  if (!topic) {
+    const want = Math.max(4, Math.round(testSecs / 36));
+    const cands = [];
+    subs.forEach(s => {
+      const nt = exam ? null : nextTopic(s);
+      s.topics.forEach(tp => {
+        if (!(exam || state.p.seen[tp.id] || tp === nt)) return;
+        tp.items.forEach(it => { if (["mc", "tf", "fill", "num"].includes(it.t)) cands.push({ sid: s.id, it }); });
+      });
+    });
+    for (const c of shuffle(cands).slice(0, want)) { test.push({ k: "item", phase: "test", sid: c.sid, id: c.it.id }); reserved.add(c.it.id); }
+  }
+  const plans = subs.map((s, i) => planSubject(s, alloc[i] - testSecs / subs.length, { exam, topic, reserved }));
+  const reviews = shuffle(plans.flatMap(p => p.steps.filter(x => x.phase === "review")));
+  const blocks = plans.flatMap(p => p.steps.filter(x => x.phase !== "review"));
+  const steps = [...reviews, ...blocks, ...test];
+  return {
+    steps, idx: 0, sids, minutes, exam, topic, budget: total, elapsed: 0, perSubj: {}, started: Date.now(),
+    results: [], retried: new Set(), xp: 0, answered: false, dayMarked: false,
+  };
+}
+
+/* ---------- vistas ---------- */
+const root = $("#root"), dock = $("#dock"), dockIn = $("#dock-in"), tabbar = $("#tabbar");
+function setDock(html, cls = "") { dock.className = "dock" + (cls ? " " + cls : ""); if (!html) { dock.hidden = true; dockIn.innerHTML = ""; return; } dock.hidden = false; dockIn.innerHTML = html; }
+function toast(msg) { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
+function sc(sid) { return `var(--${sid})`; }
+const SUBJ_ICON = {
+  inf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 4.5l-3 15"/></svg>',
+  ing: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16a2 2 0 012 2v9a2 2 0 01-2 2h-8l-5 4v-4H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><path fill="var(--c, #000)" opacity=".9" d="M7.2 13.5L9.4 7.5h1.4l2.2 6h-1.5l-.4-1.2H9.1l-.4 1.2H7.2zm2.3-2.4h1.4l-.7-2.1-.7 2.1zM14 13.5v-6h3.4c1.2 0 1.9.6 1.9 1.6 0 .6-.3 1-.8 1.2.6.2 1 .7 1 1.4 0 1.1-.8 1.8-2.1 1.8H14zm1.4-3.6h1.8c.5 0 .8-.3.8-.7s-.3-.6-.8-.6h-1.8v1.3zm0 2.4h1.9c.5 0 .8-.3.8-.7s-.3-.7-.8-.7h-1.9v1.4z"/></svg>',
+  fis: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/><circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/></svg>',
+  mat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6l7 8-7 8h12"/></svg>',
+  eg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M3 21V3l18 18H3z"/><path d="M7 17V12l5 5H7z"/><path d="M3 8h2M3 12h2M3 16h2"/></svg>',
+};
+const TAB_ICON = {
+  hoy: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 7.5V21a1 1 0 01-1 1h-5.5v-6.5h-5V22H4a1 1 0 01-1-1V10.5L12 3z"/></svg>',
+  asig: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 3h7a1 1 0 011 1v16.5a.5.5 0 01-.8.4C9.9 20 8.4 19.5 7 19.5H4a1 1 0 01-1-1V4a1 1 0 011-1zm9 1a1 1 0 011-1h6a1 1 0 011 1v14.5a1 1 0 01-1 1h-3c-1.4 0-2.9.5-4.2 1.4a.5.5 0 01-.8-.4V4z"/></svg>',
+  prog: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="12" width="4.5" height="9" rx="1.2"/><rect x="9.75" y="7" width="4.5" height="14" rx="1.2"/><rect x="16.5" y="3" width="4.5" height="18" rx="1.2"/></svg>',
+  ajus: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.3 2h3.4l.5 2.6c.6.2 1.2.5 1.7.9l2.5-.9 1.7 2.9-2 1.8c.1.6.1 1.2 0 1.8l2 1.8-1.7 2.9-2.5-.9c-.5.4-1.1.7-1.7.9l-.5 2.6h-3.4l-.5-2.6c-.6-.2-1.2-.5-1.7-.9l-2.5.9-1.7-2.9 2-1.8a6 6 0 010-1.8l-2-1.8 1.7-2.9 2.5.9c.5-.4 1.1-.7 1.7-.9L10.3 2zM12 8.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z" transform="translate(0 1)"/></svg>',
+};
+const UI_ICON = {
+  flame: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3.5 5.5 5.6 5.5 11a5.5 5.5 0 01-11 0c0-2.4 1-4.1 2.4-5.5.2 1.6.9 2.7 2 3.2C10.3 7.7 11 4.6 12 2z"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2L4 14h6.5L9.5 22 20 9.5h-6.5l0-7.5z"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  star: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8L12 2.5z"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  book: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3h11a3 3 0 013 3v13a1 1 0 01-1 1H7a2 2 0 010-4h10V6a1 1 0 00-1-1H6v11.5A3.9 3.9 0 005 16V3z"/></svg>',
+  chev: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+  wrong: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  trophy: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v2h3v3a4 4 0 01-4 4h-.3A5 5 0 0113 15v3h3v3H8v-3h3v-3a5 5 0 01-2.7-3H8a4 4 0 01-4-4V5h3V3zm-1 4v1a2 2 0 002 2V7H6zm12 0h-2v3a2 2 0 002-2V7z"/></svg>',
+};
+const shortTitle = t => t.replace(/^(Tema|Unit) [^·]*· ?/, "");
+
+function setNav(show) {
+  if (!tabbar.dataset.ready) {
+    tabbar.dataset.ready = "1";
+    $("#tabbar-in").innerHTML = [["hoy", "Hoy"], ["asig", "Asignaturas"], ["prog", "Progreso"], ["ajus", "Ajustes"]]
+      .map(([id, lbl]) => `<button class="tab" data-act="tab" data-tab="${id}">${TAB_ICON[id]}${lbl}</button>`).join("");
+  }
+  tabbar.hidden = !show;
+  if (show) tabbar.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-current", b.dataset.tab === state.tab ? "page" : "false"));
+}
+function topBar() {
+  const stk = displayStreak(), L = state.p.days[dayKey(TODAY())] || { m: 0 };
+  return `<header class="top">
+    <div class="brand"><span>Electrolingo</span><svg class="logo" viewBox="36 18 108 128" aria-hidden="true"><polygon fill="#f2b632" stroke="#d99a0f" stroke-width="3" stroke-linejoin="round" points="90,46 104.1,79.6 140.4,82.4 112.8,106.2 121.1,141.6 90,122.6 58.9,141.6 67.2,106.2 39.6,82.4 75.9,79.6"/><path class="cap" d="M68 50 L68 62 Q90 72 112 62 L112 50 Z" fill="#141b24"/><polygon class="cap" points="90,22 138,40 90,58 42,40" fill="#141b24"/><polygon points="90,26 129,40 90,54 51,40" fill="#232d3b"/><circle cx="90" cy="40" r="3.2" fill="#f2b632"/><path d="M90 40 L128 46 L128 66" fill="none" stroke="#f2b632" stroke-width="3" stroke-linecap="round"/><path d="M124 64 L132 64 L134 76 L122 76 Z" fill="#f2b632"/></svg></div>
+    <div class="stats">
+      <span class="stat-chip${stk.n ? " flame" : ""}" title="Racha de días">${UI_ICON.flame}${stk.n}</span>
+      <span class="stat-chip gold" title="Experiencia">${UI_ICON.bolt}${state.p.xp}</span>
+      <span class="stat-chip blue" title="Minutos de hoy">${UI_ICON.clock}${Math.floor(L.m / 60)}′</span>
+    </div>
+  </header>`;
+}
+function render() {
+  if (state.view === "home") return renderTab();
+  if (state.view === "subject") return renderSubject();
+  if (state.view === "session") return renderStep();
+  if (state.view === "end") return renderEnd();
+  if (state.view === "read") return renderRead();
+}
+function renderHome() { state.view = "home"; renderTab(); }
+function renderTab() {
+  state.view = "home"; state.tab = state.tab || "hoy";
+  setDock(""); setNav(true);
+  if (state.tab === "asig") renderSubjects();
+  else if (state.tab === "prog") renderProgress();
+  else if (state.tab === "ajus") renderSettings();
+  else renderToday();
+}
+function examCard() {
+  const B = state.bundle;
+  const upcoming = (B.exams || []).filter(e => e.subject && examDays(e) >= 0).sort((a, b) => a.date.localeCompare(b.date));
+  if (!upcoming.length) return "";
+  const e = upcoming[0], d = examDays(e), s = state.subj[e.subject], when = new Date(e.date);
+  const lbl = d === 0 ? "hoy" : d === 1 ? "mañana" : `en ${d} días`;
+  return `<section class="exam" style="--c:${sc(e.subject)}">
+    <div class="exam-row">
+      <div class="countdown"><b>${d}</b><span>${d === 1 ? "día" : "días"}</span></div>
+      <div style="min-width:0"><div class="eyebrow">${state.isOwner === false ? "Próximo examen del autor" : "Próximo examen"}</div><h2>${esc(e.title)}</h2>
+      <p style="font-size:.9rem;opacity:.9">${lbl}, ${when.getDate()} ${MONTHS[when.getMonth()]} a las ${String(when.getHours()).padStart(2, "0")}:${String(when.getMinutes()).padStart(2, "0")}</p></div>
+    </div>
+    ${d <= 14 ? `<button class="mini" data-act="exam" data-sid="${e.subject}">Repaso de examen de ${esc(s.name)}</button>` : ""}
+    ${upcoming.length > 1 ? `<div class="exam-list">${upcoming.slice(1, 5).map(x => `<div><span>${esc(x.title)}</span><b>${examDays(x)} d</b></div>`).join("")}</div>` : ""}
+  </section>`;
+}
+function ringSvg(frac, color) {
+  const r = 40, c = 2 * Math.PI * r, f = clamp(frac, 0, 1);
+  return `<svg viewBox="0 0 92 92" aria-hidden="true"><circle cx="46" cy="46" r="${r}" fill="none" stroke="var(--line)" stroke-width="10"/>
+    <circle cx="46" cy="46" r="${r}" fill="none" stroke="${color}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(c * f).toFixed(1)} ${c.toFixed(1)}"/></svg>`;
+}
+function renderToday() {
+  const t = TODAY(), L = state.p.days[dayKey(t)] || { m: 0 }, goal = state.p.settings.minutes || 25, stk = displayStreak();
+  const mins = Math.floor(L.m / 60), n = state.selected.size;
+  const pend = state.pendingSession;
+  root.innerHTML = topBar() + `
+    ${pend ? `<section class="card"><h3>Tienes una sesión a medias</h3><p class="muted">Puedes seguir por donde la dejaste.</p>
+      <div style="display:flex;gap:10px"><button class="btn secondary" data-act="discard">Descartar</button><button class="btn" data-act="resume">Continuar</button></div></section>` : ""}
+    <section class="card goal">
+      <div class="ring">${ringSvg(L.m / (goal * 60), mins >= goal ? "var(--gold)" : "var(--ok)")}<div class="num"><span>${mins}<small>de ${goal} min</small></span></div></div>
+      <div style="display:grid;gap:4px">
+        <h2>${mins >= goal ? "Objetivo cumplido" : mins ? "Sigue así" : "Tu sesión de hoy"}</h2>
+        <p class="muted">${stk.n ? `Racha de ${stk.n} día${stk.n === 1 ? "" : "s"}.` : "Empieza hoy una racha."} ${stk.risk && L.m < 600 ? "Estudia 10 minutos para no perderla." : state.p.freezes ? `${state.p.freezes} congelador${state.p.freezes > 1 ? "es" : ""} guardado${state.p.freezes > 1 ? "s" : ""}.` : ""}</p>
+      </div>
+    </section>
+    ${examCard()}
+    <section class="card">
+      <div class="section-head"><h2>¿Qué estudias hoy?</h2><button class="linkbtn" data-act="surprise">Sorpréndeme</button></div>
+      <div class="chips">${state.bundle.subjects.map(s => `<button class="pick" style="--c:${sc(s.id)}" data-act="toggle" data-sid="${s.id}" aria-pressed="${state.selected.has(s.id)}"><span class="ico">${SUBJ_ICON[s.id] || ""}</span>${esc(s.name)}</button>`).join("")}</div>
+      <div class="eyebrow">Duración</div>
+      <div class="seg" role="group" aria-label="Duración">${[10, 25, 40].map(m => `<button data-act="min" data-m="${m}" aria-pressed="${state.minutes === m}">${m} min</button>`).join("")}</div>
+      <p class="muted" style="font-size:.85rem">${n > 1 ? "El tiempo se reparte según repasos pendientes, días sin tocar y exámenes cercanos." : "Repaso, lección nueva, práctica y un mini test al final."}</p>
+      <button class="btn" data-act="start" ${n ? "" : "disabled"}>${n ? `Empezar · ${state.minutes} min` : "Elige una asignatura"}</button>
+    </section>`;
+  window.scrollTo(0, 0);
+}
+function renderSubjects() {
+  const t = TODAY();
+  root.innerHTML = topBar() + `<h1>Asignaturas</h1><div class="subj-list">${state.bundle.subjects.map(s => {
+    const seen = s.topics.filter(tp => state.p.seen[tp.id]).length, m = Math.round(subjectMastery(s) * 100);
+    const due = dueItems(s.id).length, ex = nextExam(s.id), ls = lastStudied(s.id);
+    const badges = [];
+    if (ex) { const d = examDays(ex); if (d <= 30) badges.push(`<span class="badge hot" style="--c:${sc(s.id)}">examen ${d === 0 ? "hoy" : d === 1 ? "mañana" : "en " + d + " d"}</span>`); }
+    if (due) badges.push(`<span class="badge">${due} repaso${due > 1 ? "s" : ""}</span>`);
+    if (ls != null && t - ls >= 4) badges.push(`<span class="badge warn">${t - ls} días sin tocar</span>`);
+    return `<button class="subj-card" style="--c:${sc(s.id)}" data-act="subject" data-sid="${s.id}">
+      <span class="subj-ico">${SUBJ_ICON[s.id] || ""}</span>
+      <span class="body"><h3>${esc(s.name)}</h3>
+        <span class="meta">${seen} de ${s.topics.length} temas empezados · nivel ${level(state.p.sxp[s.id])}</span>
+        <span class="bar thin" title="Dominio ${m}%"><i style="width:${Math.max(m, 2)}%"></i></span>
+        ${badges.length ? `<span class="badges">${badges.join("")}</span>` : ""}</span>
+      <span class="chev">${UI_ICON.chev}</span>
+    </button>`;
+  }).join("")}</div>`;
+  window.scrollTo(0, 0);
+}
+function renderSubject() {
+  state.view = "subject"; setDock(""); setNav(true);
+  const s = state.subj[state.cur], nt = nextTopic(s), ex = nextExam(s.id);
+  const m = Math.round(subjectMastery(s) * 100), seen = s.topics.filter(tp => state.p.seen[tp.id]).length;
+  const OFF = [0, 38, 56, 38, 0, -38, -56, -38];
+  root.innerHTML = topBar() + `
+    <section class="unit" style="--c:${sc(s.id)}">
+      <button class="back" data-act="tab" data-tab="asig">${ICON.left} Asignaturas</button>
+      <div class="eyebrow">Nivel ${level(state.p.sxp[s.id])} · ${seen} de ${s.topics.length} temas empezados · dominio ${m}%</div>
+      <h1>${esc(s.name)}</h1>
+      <div class="unit-actions">
+        <button class="mini primary" data-act="startone" data-sid="${s.id}">Sesión de ${state.minutes} min</button>
+        ${ex && examDays(ex) <= 30 ? `<button class="mini" data-act="exam" data-sid="${s.id}">Repaso de examen</button>` : ""}
+      </div>
+    </section>
+    <p class="muted" style="text-align:center;font-size:.9rem">Toca un tema para aprenderlo o repasarlo.</p>
+    <div class="path">${s.topics.map((tp, i) => {
+      const tm = topicMastery(s.id, tp), isSeen = !!state.p.seen[tp.id], done = tm >= 0.8, isNext = nt && nt.id === tp.id;
+      const cls = done ? "done" : isSeen || isNext ? "" : "new";
+      const icon = done ? UI_ICON.star : isSeen ? UI_ICON.check : UI_ICON.book;
+      return `<div class="stop" style="transform:translateX(${OFF[i % OFF.length]}px)">
+        ${isNext ? `<span class="bubble" style="--c:${sc(s.id)}">Empieza aquí</span>` : ""}
+        <button class="node ${cls}${isNext ? " next" : ""}" style="--c:${sc(s.id)}" data-act="node" data-tid="${tp.id}" aria-label="${esc(tp.title)}">${icon}</button>
+        <span class="label">${esc(shortTitle(tp.title))}<small>${isSeen ? Math.round(tm * 100) + " % dominado" : "sin empezar"}</small></span>
+      </div>`;
+    }).join("")}</div>`;
+  window.scrollTo(0, 0);
+}
+function openSheet(tid) {
+  const s = state.bundle.subjects.find(x => x.topics.some(t => t.id === tid)), tp = s.topics.find(t => t.id === tid);
+  const tm = Math.round(topicMastery(s.id, tp) * 100), isSeen = !!state.p.seen[tp.id];
+  const due = dueItems(s.id).filter(id => id.startsWith(tp.id + "-")).length;
+  const wrap = document.createElement("div");
+  wrap.className = "sheet-back"; wrap.id = "sheet";
+  wrap.innerHTML = `<div class="sheet" style="--c:${sc(s.id)}" role="dialog" aria-modal="true" aria-label="${esc(tp.title)}">
+    <div class="eyebrow">${esc(s.name)}</div>
+    <h2>${esc(tp.title)}</h2>
+    <p class="muted">${esc(tp.summary)}</p>
+    <div style="display:grid;gap:6px"><div class="section-head"><span class="eyebrow">Dominio</span><b>${isSeen ? tm + " %" : "Sin empezar"}</b></div>
+      <div class="bar" style="--c:${sc(s.id)}"><i style="width:${Math.max(tm, 2)}%"></i></div></div>
+    <p class="muted" style="font-size:.88rem">${tp.lesson.length} pantallas de teoría · ${tp.items.length} ejercicios${due ? ` · ${due} para repasar hoy` : ""}</p>
+    <div class="btns">
+      <button class="btn sub" style="--c:${sc(s.id)}" data-act="topic" data-tid="${tp.id}">${isSeen ? "Practicar este tema" : "Aprender este tema"}</button>
+      ${tp.lesson.length ? `<button class="btn secondary" data-act="read" data-tid="${tp.id}">Leer la teoría</button>` : ""}
+      <button class="btn secondary" data-act="closesheet" style="color:var(--ink-3)">Cerrar</button>
+    </div>
+  </div>`;
+  wrap.addEventListener("click", e => { if (e.target === wrap) closeSheet(); });
+  document.body.appendChild(wrap);
+}
+function closeSheet() { $("#sheet")?.remove(); }
+function fmtGen(g) { if (!g) return "?"; const d = new Date(g); return `${d.getDate()} ${MONTHS[d.getMonth()]} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`; }
+
+function weekHtml() {
+  const t = TODAY(), subs = state.bundle.subjects, W = 300, H = 130, bw = 28, gap = (W - 7 * bw) / 6;
+  const goal = (state.p.settings.minutes || 25);
+  const days = []; for (let k = 6; k >= 0; k--) days.push(t - k);
+  const maxM = Math.max(goal * 1.4, ...days.map(d => ((state.p.days[dayKey(d)] || {}).m || 0) / 60));
+  const y = v => H - 20 - (v / maxM) * (H - 32);
+  let bars = "";
+  const totals = {};
+  days.forEach((d, i) => {
+    const L = state.p.days[dayKey(d)] || { s: {} }; let acc = 0; const x = i * (bw + gap);
+    subs.forEach(s => {
+      const m = ((L.s || {})[s.id] || 0) / 60; totals[s.id] = (totals[s.id] || 0) + m;
+      if (m > 0) { const y0 = y(acc), y1 = y(acc + m); bars += `<rect x="${x}" y="${y1}" width="${bw}" height="${Math.max(1, y0 - y1)}" fill="${sc(s.id)}" rx="3"/>`; acc += m; }
+    });
+    if (!acc) bars += `<rect x="${x}" y="${H - 22}" width="${bw}" height="3" rx="1.5" fill="var(--line)"/>`;
+    const dd = new Date(d * 864e5);
+    bars += `<text x="${x + bw / 2}" y="${H - 4}" text-anchor="middle" font-size="11" font-weight="800" font-family="Nunito, sans-serif" fill="${d === t ? "var(--ink)" : "var(--ink-3)"}">${WD[dd.getUTCDay()]}</text>`;
+  });
+  const gy = y(goal);
+  const week = days.reduce((a, d) => a + ((state.p.days[dayKey(d)] || {}).m || 0), 0) / 60;
+  const ans = days.reduce((a, d) => a + ((state.p.days[dayKey(d)] || {}).n || 0), 0);
+  const cor = days.reduce((a, d) => a + ((state.p.days[dayKey(d)] || {}).c || 0), 0);
+  return `<section class="card week">
+    <div class="section-head"><h2>Últimos 7 días</h2><span class="muted" style="font-size:.88rem">${Math.round(week)} min · ${ans ? Math.round(cor / ans * 100) + " % aciertos" : "sin ejercicios"}</span></div>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Minutos por día y asignatura">
+      <line x1="0" x2="${W}" y1="${gy}" y2="${gy}" stroke="var(--gold)" stroke-dasharray="5 5" stroke-width="2"/>
+      <text x="${W}" y="${gy - 5}" text-anchor="end" font-size="10" font-weight="800" font-family="Nunito, sans-serif" fill="var(--gold-dark)">objetivo ${goal} min</text>
+      ${bars}
+    </svg>
+    <div class="legend">${subs.map(s => `<span style="--sc:${sc(s.id)}"><i></i>${esc(s.name)} ${Math.round(totals[s.id] || 0)}′</span>`).join("")}</div>
+  </section>`;
+}
+function renderProgress() {
+  const stk = displayStreak();
+  const week = (() => { let m = 0; for (let k = 0; k < 7; k++) m += ((state.p.days[dayKey(TODAY() - k)] || {}).m || 0); return Math.round(m / 60); })();
+  const upcoming = (state.bundle.exams || []).filter(e => e.subject && examDays(e) >= 0).sort((a, b) => a.date.localeCompare(b.date));
+  root.innerHTML = topBar() + `<h1>Progreso</h1>
+    <div class="tiles">
+      <div class="tile-stat" style="color:var(--flame)">${UI_ICON.flame}<div><b style="color:var(--ink)">${stk.n}</b><span>días de racha</span></div></div>
+      <div class="tile-stat" style="color:var(--gold-dark)">${UI_ICON.trophy}<div><b style="color:var(--ink)">${state.p.best}</b><span>mejor racha</span></div></div>
+      <div class="tile-stat" style="color:var(--gold)">${UI_ICON.bolt}<div><b style="color:var(--ink)">${state.p.xp}</b><span>XP total</span></div></div>
+      <div class="tile-stat" style="color:var(--sel)">${UI_ICON.clock}<div><b style="color:var(--ink)">${week}′</b><span>esta semana</span></div></div>
+    </div>
+    ${weekHtml()}
+    <section class="card"><h2>Por asignatura</h2>
+      ${state.bundle.subjects.map(s => { const m = Math.round(subjectMastery(s) * 100); return `<div class="sub-row" style="--c:${sc(s.id)}">
+        <span class="subj-ico">${SUBJ_ICON[s.id] || ""}</span>
+        <div style="display:grid;gap:6px;min-width:0"><div class="section-head"><b>${esc(s.name)}</b><span class="muted" style="font-size:.82rem">nivel ${level(state.p.sxp[s.id])} · ${state.p.sxp[s.id] || 0} XP</span></div>
+        <div class="bar thin"><i style="width:${Math.max(m, 2)}%"></i></div></div>
+        <b style="color:var(--c)">${m}%</b></div>`; }).join("")}
+    </section>
+    ${upcoming.length ? `<section class="card"><h2>Exámenes</h2>${upcoming.map(e => `<div class="section-head" style="--c:${sc(e.subject)}"><span>${esc(e.title)}</span><span class="badge hot">${examDays(e) === 0 ? "hoy" : examDays(e) === 1 ? "mañana" : "en " + examDays(e) + " d"}</span></div>`).join("")}
+      <p class="muted" style="font-size:.82rem">${state.isOwner === false ? "Fechas del calendario del autor." : "Salen de los eventos «Examen …» de tu calendario."}</p></section>` : ""}`;
+  window.scrollTo(0, 0);
+}
+function renderSettings() {
+  const snd = !!state.p.settings.sound;
+  root.innerHTML = topBar() + `<h1>Ajustes</h1>
+    <section class="card">
+      <div class="eyebrow">Objetivo diario</div>
+      <div class="seg" role="group" aria-label="Objetivo diario">${[10, 25, 40].map(m => `<button data-act="min" data-m="${m}" aria-pressed="${state.minutes === m}">${m} min</button>`).join("")}</div>
+    </section>
+    <section class="card">
+      <div class="setting"><div><b>Sonidos</b><p class="muted" style="font-size:.85rem">Pitido al acertar y al fallar</p></div><button class="switch" role="switch" aria-checked="${snd}" aria-label="Sonidos" data-act="sound"></button></div>
+      <div class="setting"><div><b>Dónde se guarda tu progreso</b><p class="muted" style="font-size:.85rem">${state.sync === "cloud" ? "En tu cuenta de Claude" : "Solo en este navegador"}</p></div></div>
+      <div class="setting"><div><b>Contenido actualizado</b><p class="muted" style="font-size:.85rem">${fmtGen(state.bundle.generated)}</p></div></div>
+    </section>
+    <section class="card">
+      <div class="setting"><div><b>Código de acceso</b><p class="muted" style="font-size:.85rem">Se recuerda en este dispositivo. Al olvidarlo, se pedirá de nuevo.</p></div></div>
+      <button class="btn secondary" data-act="forgetcode" style="color:var(--bad)">Olvidar el código aquí</button>
+    </section>
+    <p class="foot">Made by Théo Fenestraz</p>`;
+  window.scrollTo(0, 0);
+}
+
+function renderRead() {
+  setNav(false);
+  const s = state.subj[state.cur]; const tp = s.topics.find(x => x.id === state.readTid);
+  root.innerHTML = `<button class="back" data-act="subject" data-sid="${s.id}">${ICON.left} ${esc(s.name)}</button>
+    <h1>${esc(tp.title)}</h1>
+    ${tp.lesson.map(ls => `<article class="lesson" style="--sc:${sc(s.id)}"><h2>${esc(ls.h)}</h2><div class="rich">${rich(ls.t)}</div></article>`).join("")}`;
+  setDock(`<button class="btn sub" style="--c:${sc(s.id)}" data-act="topic" data-tid="${tp.id}">Practicar este tema</button>`);
+  typeset(root); window.scrollTo(0, 0);
+}
+
+/* ---------- sesión ---------- */
+let tick = null, lastTick = 0;
+function startTimer() {
+  clearInterval(tick); lastTick = Date.now();
+  tick = setInterval(() => {
+    const S = state.session; if (!S || state.view !== "session") return;
+    const now = Date.now(); const dt = Math.min(5, (now - lastTick) / 1000); lastTick = now;
+    if (document.visibilityState !== "visible") return;
+    S.elapsed += dt;
+    const sid = currentSid(); S.perSubj[sid] = (S.perSubj[sid] || 0) + dt;
+    logTime(sid, dt);
+    if (!S.dayMarked && todayLog().m >= 600) { S.dayMarked = markStudyDay(); }
+    const el = $("#timer"); if (el) el.textContent = fmtClock(Math.max(0, S.budget - S.elapsed));
+    if (S.elapsed - (S.lastSave || 0) >= 30) { S.lastSave = S.elapsed; touch("p"); }
+  }, 1000);
+}
+function fmtClock(s) { s = Math.round(s); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
+function currentSid() { const S = state.session; const st = S.steps[Math.min(S.idx, S.steps.length - 1)]; return st ? st.sid : S.sids[0]; }
+const PHASE = { review: "Calentamiento · repaso", lesson: "Lección nueva", practice: "Práctica", retry: "Segunda oportunidad", test: "Mini test final" };
+
+function startSession(opts) {
+  const S = buildSession(opts);
+  if (!S.steps.length) { toast("No hay ejercicios disponibles para esa selección."); return; }
+  state.session = S; state.view = "session";
+  startTimer(); renderStep();
+}
+function saveSessionLocal() {
+  const S = state.session; if (!S) return;
+  try { localStorage.setItem(LS + "-sess", JSON.stringify(Object.assign({}, S, { retried: [...S.retried], savedDay: TODAY() }))); } catch (e) { /* nada */ }
+}
+function clearSessionLocal() { try { localStorage.removeItem(LS + "-sess"); } catch (e) { /* nada */ } }
+
+function renderStep() {
+  const S = state.session;
+  if (S.idx >= S.steps.length) return finishSession();
+  const step = S.steps[S.idx]; const s = state.subj[step.sid];
+  setNav(false);
+  const pct = Math.round(S.idx / S.steps.length * 100);
+  S.answered = false;
+  const head = `<div class="sess-top" style="--sc:${sc(s.id)}">
+      <div class="sess-bar"><button class="x" data-act="quit" aria-label="Terminar sesión">${ICON.x}</button>
+      <div class="prog"><i style="width:${pct}%"></i></div><span class="timer mono" id="timer">${fmtClock(Math.max(0, S.budget - S.elapsed))}</span></div>
+      <div class="phase"><span class="dot"></span><b>${PHASE[step.phase]}</b><span class="muted">· ${esc(s.name)}</span></div>
+    </div>`;
+  if (step.k === "lesson") {
+    const tp = s.topics.find(x => x.id === step.tid); const ls = tp.lesson[step.i];
+    root.innerHTML = head + `<div class="stage" style="--sc:${sc(s.id)}">
+      <div class="eyebrow">${esc(tp.title)} · ${step.i + 1}/${tp.lesson.length}</div>
+      <article class="lesson"><h2>${esc(ls.h)}</h2><div class="rich">${rich(ls.t)}</div></article></div>`;
+    setDock(`<button class="btn" data-act="lessonnext">${step.i + 1 < tp.lesson.length ? "Siguiente" : "Ponerlo a prueba"}</button>`);
+    typeset(root); window.scrollTo(0, 0);
+    return;
+  }
+  const it = state.items[step.id];
+  root.innerHTML = head + `<div class="stage" id="stage" style="--sc:${sc(s.id)}">${itemHtml(it)}</div>`;
+  setDock(dockFor(it));
+  bindItem(it);
+  typeset(root); window.scrollTo(0, 0);
+}
+
+function qHtml(it) { return `<p class="q">${inline(it.q || "")}</p>${codeBlock(it.code)}`; }
+function itemHtml(it) {
+  const S = state.session;
+  switch (it.t) {
+    case "mc": {
+      const order = shuffle(it.o.map((_, i) => i)); S.mcOrder = order;
+      return qHtml(it) + `<div class="opts">${order.map((oi, k) => `<button class="opt" data-oi="${oi}"><span class="key">${"ABCDEF"[k]}</span><span>${inline(it.o[oi])}</span></button>`).join("")}</div>`;
+    }
+    case "tf":
+      return `<div class="eyebrow">Verdadero o falso</div>` + qHtml(it) + `<div class="tf"><button class="opt" data-v="1">Verdadero</button><button class="opt" data-v="0">Falso</button></div>`;
+    case "fill":
+      return `<div class="eyebrow">Completa</div>` + qHtml(it) + `<input class="field" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tu respuesta">`;
+    case "num":
+      return `<div class="eyebrow">Calcula</div>` + qHtml(it) + `<div style="display:flex;gap:10px;align-items:center"><input class="field" id="ans" inputmode="decimal" autocomplete="off" placeholder="Resultado">${it.u ? `<span class="unit-lbl">${esc(it.u)}</span>` : ""}</div>`;
+    case "match": {
+      const L = shuffle(it.p.map((_, i) => i)), R = shuffle(it.p.map((_, i) => i));
+      return `<div class="eyebrow">Empareja</div><p class="q">${inline(it.q)}</p>
+        <div class="match"><div class="col">${L.map(i => `<button class="tile" data-side="l" data-i="${i}">${inline(it.p[i][0])}</button>`).join("")}</div>
+        <div class="col">${R.map(i => `<button class="tile" data-side="r" data-i="${i}">${inline(it.p[i][1])}</button>`).join("")}</div></div>`;
+    }
+    case "order": {
+      let idx = shuffle(it.s.map((_, i) => i)); if (idx.every((v, i) => v === i) && idx.length > 1) idx = idx.reverse();
+      S.orderPool = idx; S.orderSeq = [];
+      return `<div class="eyebrow">Ordena</div><p class="q">${inline(it.q)}</p><div class="order-slots" id="slots"><span class="muted" style="font-size:.85rem">Toca los pasos en orden. Toca uno colocado para devolverlo.</span></div><div class="order-pool" id="pool"></div>`;
+    }
+    case "sort":
+      S.sortIdx = 0; S.sortErr = 0; S.sortList = shuffle(it.i);
+      return `<div class="eyebrow">Clasifica</div><p class="q">${inline(it.q)}</p><div id="sortbox"></div>`;
+    case "flash":
+      return `<div class="eyebrow">Tarjeta · intenta responder antes de girarla</div>
+        <div class="flash" id="flash"><div class="flash-in">
+          <div class="face"><p class="q">${inline(it.f)}</p></div>
+          <div class="face back"><div class="rich">${rich(it.b)}</div></div>
+        </div></div>`;
+    case "open":
+      return `<div class="eyebrow">Explícalo con tus palabras</div>` + qHtml(it) + `<textarea class="field" id="ans" placeholder="Escribe tu respuesta. No hace falta que sea perfecta."></textarea>`;
+  }
+  return `<p>Tipo desconocido</p>`;
+}
+function dockFor(it) {
+  if (["fill", "num"].includes(it.t)) return `<button class="btn" data-act="check">Comprobar</button>`;
+  if (it.t === "open") return `<button class="btn secondary" data-act="skipopen">No lo sé</button><button class="btn" data-act="check">Corregir</button>`;
+  if (it.t === "order") return `<button class="btn" data-act="check" id="ordercheck" disabled>Comprobar</button>`;
+  if (it.t === "flash") return `<button class="btn" data-act="flip">Girar tarjeta</button>`;
+  return "";
+}
+
+function bindItem(it) {
+  const S = state.session, stage = $("#stage");
+  if (it.t === "mc") stage.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
+    if (S.answered) return;
+    const ok = +b.dataset.oi === it.a;
+    stage.querySelectorAll(".opt").forEach(x => { x.disabled = true; if (+x.dataset.oi === it.a) x.classList.add("right"); });
+    if (!ok) b.classList.add("wrong");
+    answer(it, ok);
+  }));
+  if (it.t === "tf") stage.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
+    if (S.answered) return;
+    const v = b.dataset.v === "1", ok = v === it.a;
+    stage.querySelectorAll(".opt").forEach(x => { x.disabled = true; if ((x.dataset.v === "1") === it.a) x.classList.add("right"); });
+    if (!ok) b.classList.add("wrong");
+    answer(it, ok);
+  }));
+  if (["fill", "num"].includes(it.t)) {
+    const inp = $("#ans"); setTimeout(() => inp.focus({ preventScroll: true }), 50);
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); checkTyped(it); } });
+  }
+  if (it.t === "match") {
+    let selL = null, selR = null, errs = 0, done = 0;
+    const tiles = stage.querySelectorAll(".tile");
+    const tryPair = () => {
+      if (selL == null || selR == null) return;
+      const bl = stage.querySelector(`.tile[data-side="l"][data-i="${selL}"]`), br = stage.querySelector(`.tile[data-side="r"][data-i="${selR}"]`);
+      if (selL === selR) { bl.classList.add("done"); br.classList.add("done"); done++; beep(true); }
+      else { errs++; [bl, br].forEach(x => { x.classList.remove("shake"); void x.offsetWidth; x.classList.add("shake"); }); beep(false); }
+      bl.setAttribute("aria-pressed", "false"); br.setAttribute("aria-pressed", "false"); selL = selR = null;
+      if (done === it.p.length) answer(it, errs <= 1, { note: errs ? `${errs} fallo${errs > 1 ? "s" : ""} al emparejar` : "Sin fallos", silent: true });
+    };
+    tiles.forEach(b => b.addEventListener("click", () => {
+      const side = b.dataset.side, i = +b.dataset.i;
+      stage.querySelectorAll(`.tile[data-side="${side}"]`).forEach(x => x.setAttribute("aria-pressed", "false"));
+      b.setAttribute("aria-pressed", "true");
+      if (side === "l") selL = i; else selR = i;
+      tryPair();
+    }));
+  }
+  if (it.t === "order") drawOrder(it);
+  if (it.t === "sort") drawSort(it);
+  if (it.t === "flash") $("#flash").addEventListener("click", flipFlash);
+}
+function drawOrder(it) {
+  const S = state.session, slots = $("#slots"), pool = $("#pool");
+  slots.innerHTML = S.orderSeq.length ? S.orderSeq.map((i, k) => `<button class="tile" data-i="${i}" data-from="seq"><span class="n">${k + 1}</span><span>${inline(it.s[i])}</span></button>`).join("") : `<span class="muted" style="font-size:.85rem">Toca los pasos en orden. Toca uno colocado para devolverlo.</span>`;
+  pool.innerHTML = S.orderPool.map(i => `<button class="tile" data-i="${i}" data-from="pool">${inline(it.s[i])}</button>`).join("");
+  [...slots.querySelectorAll(".tile"), ...pool.querySelectorAll(".tile")].forEach(b => b.addEventListener("click", () => {
+    if (S.answered) return;
+    const i = +b.dataset.i;
+    if (b.dataset.from === "pool") { S.orderPool = S.orderPool.filter(x => x !== i); S.orderSeq.push(i); }
+    else { S.orderSeq = S.orderSeq.filter(x => x !== i); S.orderPool.push(i); }
+    drawOrder(it);
+  }));
+  const c = $("#ordercheck"); if (c) c.disabled = S.orderPool.length > 0;
+}
+function drawSort(it) {
+  const S = state.session, box = $("#sortbox");
+  if (S.sortIdx >= S.sortList.length) {
+    const ok = S.sortErr === 0 || (S.sortList.length >= 6 && S.sortErr === 1);
+    box.innerHTML = "";
+    answer(it, ok, { note: S.sortErr ? `${S.sortErr} de ${S.sortList.length} mal clasificados` : `${S.sortList.length} de ${S.sortList.length} bien`, silent: true });
+    return;
+  }
+  const [text, cat] = S.sortList[S.sortIdx];
+  box.innerHTML = `<div style="display:grid;gap:12px"><div class="sort-count">${S.sortIdx + 1} / ${S.sortList.length}</div>
+    <div class="sort-card" id="sc">${inline(text)}</div>
+    <div class="sort-cats">${it.c.map((c, k) => `<button class="opt" style="justify-content:center" data-k="${k}">${inline(c)}</button>`).join("")}</div></div>`;
+  typeset(box);
+  box.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
+    const k = +b.dataset.k, ok = k === cat;
+    box.querySelectorAll(".opt").forEach(x => { x.disabled = true; if (+x.dataset.k === cat) x.classList.add("right"); });
+    if (!ok) { b.classList.add("wrong"); S.sortErr++; }
+    beep(ok);
+    setTimeout(() => { S.sortIdx++; drawSort(it); }, ok ? 380 : 1100);
+  }));
+}
+function flipFlash() {
+  const f = $("#flash"); if (!f || f.classList.contains("flipped")) return;
+  f.classList.add("flipped");
+  setDock(`<div class="grade3" style="flex:1"><button class="btn bad" data-act="fgrade" data-q="0">Otra vez</button><button class="btn secondary" data-act="fgrade" data-q="4" style="flex:1">Bien</button><button class="btn ok" data-act="fgrade" data-q="5">Fácil</button></div>`);
+}
+
+function checkTyped(it) {
+  const S = state.session; if (S.answered) return;
+  const inp = $("#ans"); const v = inp.value.trim(); if (!v) { inp.focus(); return; }
+  let ok;
+  if (it.t === "num") {
+    let s = v.replace(/\s/g, "");
+    if ((s.match(/\./g) || []).length > 1) s = s.replace(/\./g, "");
+    s = s.replace(",", ".");
+    const n = parseFloat(s);
+    const tol = it.tol || Math.max(1e-9, Math.abs(it.a) * 1e-9);
+    ok = Number.isFinite(n) && Math.abs(n - it.a) <= tol + 1e-12;
+  } else {
+    const nv = norm(v).replace(/\s/g, "");
+    ok = it.a.some(a => norm(a).replace(/\s/g, "") === nv);
+  }
+  inp.disabled = true; inp.classList.add(ok ? "right" : "wrong");
+  answer(it, ok);
+}
+function checkOrder(it) {
+  const S = state.session; if (S.answered) return;
+  const ok = S.orderSeq.every((v, i) => v === i);
+  $("#slots").querySelectorAll(".tile").forEach((b, k) => b.classList.add(+b.dataset.i === k ? "right" : "wrong"));
+  answer(it, ok, { extra: ok ? "" : `<div class="model"><b>Orden correcto</b><ol style="margin:6px 0 0;padding-left:1.2em">${it.s.map(x => `<li>${inline(x)}</li>`).join("")}</ol></div>` });
+}
+async function checkOpen(it, skip) {
+  const S = state.session; if (S.answered) return;
+  const inp = $("#ans"); const v = skip ? "" : inp.value.trim();
+  if (!skip && v.length < 3) { inp.focus(); return; }
+  inp.disabled = true;
+  const model = `<div class="model"><b>Respuesta modelo</b><div class="rich" style="margin-top:4px">${rich(it.m)}</div>${it.k.length ? `<p style="margin-top:6px" class="muted">Ideas clave: ${it.k.map(inline).join(" · ")}</p>` : ""}</div>`;
+  if (skip) { answer(it, false, { extra: model }); return; }
+  if (state.sample === undefined) state.sample = window.claude?.use ? await window.claude.use("sample").catch(() => null) : null;
+  if (state.sample) {
+    setDock(`<button class="btn" disabled>Corrigiendo…</button>`);
+    try {
+      const r = await state.sample.json(
+        "Eres profesor de primero de Ingeniería Electrónica Industrial y Automática en la UPV. Corrige la respuesta de un estudiante comparándola con la respuesta modelo y las ideas clave. Sé justo: acepta otras formulaciones si son correctas. No inventes contenidos fuera del modelo.\n\n" +
+        `PREGUNTA: ${it.q}\n${it.code ? "CÓDIGO:\n" + it.code + "\n" : ""}RESPUESTA MODELO: ${it.m}\nIDEAS CLAVE: ${it.k.join("; ")}\n\nRESPUESTA DEL ESTUDIANTE: ${v.slice(0, 3000)}\n\n` +
+        'Responde solo con JSON: {"nota": 0-10, "veredicto": "bien" | "parcial" | "mal", "comentario": "una o dos frases en español, directas, dirigidas al estudiante", "falta": ["idea clave que falta", ...]}',
+        { modelTier: "quick" });
+      const nota = clamp(Number(r?.nota) || 0, 0, 10);
+      const ok = nota >= 6;
+      const falta = Array.isArray(r?.falta) && r.falta.length ? `<p class="muted" style="font-size:.9rem">Te faltó: ${r.falta.map(x => esc(String(x))).join(" · ")}</p>` : "";
+      answer(it, ok, { quality: nota >= 9 ? 5 : nota >= 6 ? 4 : nota >= 4 ? 3 : 0, extra: `<p><b class="mono">${nota}/10</b> · ${esc(String(r?.comentario || ""))}</p>${falta}${model}`, head: ok ? "Bien explicado" : nota >= 4 ? "A medias" : "Le falta bastante" });
+      return;
+    } catch (e) { /* sin corrección automática: autoevaluación */ }
+  }
+  S.answered = true;
+  setDock(`<div class="feedback neutral" id="fb"><h3>Compárala con la respuesta modelo</h3>${model}</div><div class="grade3"><button class="btn bad" data-act="selfgrade" data-q="0">No la tenía</button><button class="btn secondary" data-act="selfgrade" data-q="3">A medias</button><button class="btn ok" data-act="selfgrade" data-q="4">La tenía</button></div>`);
+  typeset(dock);
+}
+
+function answer(it, ok, o = {}) {
+  const S = state.session; if (S.answered && !o.force) return;
+  S.answered = true;
+  const step = S.steps[S.idx]; const sid = step.sid;
+  const q = o.quality != null ? o.quality : ok ? 4 : 0;
+  schedule(sid, it.id, q);
+  const L = todayLog(); L.n++; if (ok) L.c++;
+  const gain = ok ? (step.phase === "test" ? 15 : 10) : 2;
+  addXp(sid, gain); S.xp += gain;
+  S.results.push({ id: it.id, sid, ok, phase: step.phase });
+  if (!ok && step.phase !== "retry" && !S.retried.has(it.id) && it.t !== "flash") {
+    S.retried.add(it.id);
+    const testAt = S.steps.findIndex((x, k) => k > S.idx && x.phase === "test");
+    const at = testAt === -1 ? S.steps.length : testAt;
+    S.steps.splice(Math.max(S.idx + 3, Math.min(at, S.idx + 6)), 0, { k: "item", phase: "retry", sid, id: it.id });
+  }
+  touch("p");
+  if (!o.silent) beep(ok);
+  if (o.noFeedback) { next(); return; }
+  const expl = it.e ? `<div class="rich">${rich(it.e)}</div>` : "";
+  let correct = "";
+  if (!ok && it.t === "fill") correct = `<p>Respuesta: <code class="mono">${esc(it.a[0])}</code></p>`;
+  if (!ok && it.t === "num") correct = `<p>Respuesta: <b class="mono">${String(it.a).replace(".", ",")}</b>${it.u ? " " + esc(it.u) : ""}</p>`;
+  const head = o.head || (ok ? ["Correcto", "Bien hecho", "Exacto", "Eso es"][Math.floor(Math.random() * 4)] : "No exactamente");
+  const fb = `<div class="feedback" id="fb"><h3><span class="fb-ico">${ok ? UI_ICON.check : UI_ICON.wrong}</span><span>${head}${o.note ? ` <span style="font-size:.8rem;font-weight:700;opacity:.8">· ${esc(o.note)}</span>` : ""}</span></h3>${correct}${o.extra || ""}${expl}</div>`;
+  setDock(fb + `<button class="btn ${ok ? "ok" : "bad"}" data-act="next">Continuar</button>`, ok ? "fb-ok" : "fb-bad");
+  typeset(dock);
+}
+function next() {
+  const S = state.session; S.idx++;
+  saveSessionLocal();
+  if (S.elapsed >= S.budget && !S.overtimeAsked) {
+    const rest = S.steps.slice(S.idx);
+    const firstTest = rest.findIndex(x => x.phase === "test");
+    if (firstTest > 0) { S.steps.splice(S.idx, firstTest); }
+    S.overtimeAsked = true;
+    if (firstTest === -1) return finishSession();
+  }
+  renderStep();
+}
+function finishSession() {
+  const S = state.session;
+  clearInterval(tick);
+  if (!S.dayMarked && S.results.length >= 5) S.dayMarked = markStudyDay();
+  for (const sid of S.sids) { /* lecciones vistas ya se marcan al pasar */ }
+  touch("p"); flush(); clearSessionLocal();
+  state.view = "end"; renderEnd();
+}
+function renderEnd() {
+  const S = state.session;
+  const n = S.results.length, c = S.results.filter(r => r.ok).length;
+  const misses = [...new Map(S.results.filter(r => !r.ok).map(r => [r.id, r])).values()].filter(r => !S.results.some(x => x.id === r.id && x.ok && x.phase === "retry"));
+  const stk = displayStreak();
+  const mins = Math.round(S.elapsed / 60);
+  setNav(false);
+  root.innerHTML = `<section class="end-hero">
+      <span class="burst" style="color:var(--gold)">${UI_ICON.trophy}</span>
+      <h1>¡Sesión completada!</h1>
+      <p class="muted">Racha de ${stk.n} día${stk.n === 1 ? "" : "s"}</p>
+    </section>
+    <div class="stats3">
+      <div class="stat" style="--c:var(--gold)"><span>XP ganada</span><b>+${S.xp}</b></div>
+      <div class="stat" style="--c:var(--ok)"><span>Aciertos</span><b>${n ? Math.round(c / n * 100) : 0}%</b></div>
+      <div class="stat" style="--c:var(--sel)"><span>Minutos</span><b>${mins}′</b></div>
+    </div>
+    ${Object.keys(S.perSubj).length > 1 ? `<section class="card"><h2>Reparto del tiempo</h2><div class="legend">${Object.entries(S.perSubj).map(([sid, sec]) => `<span style="--sc:${sc(sid)}"><i></i>${esc(state.subj[sid].name)} <span class="mono">${Math.round(sec / 60)}′</span></span>`).join("")}</div></section>` : ""}
+    <section class="card"><h2>${misses.length ? "Para repasar" : "Sin fallos pendientes"}</h2>
+      ${misses.length ? misses.map(r => { const it = state.items[r.id]; return `<div class="miss" style="--sc:${sc(r.sid)}"><span class="eyebrow">${esc(state.subj[r.sid].name)}</span><b>${inline(it.q || it.f)}</b>${it.e ? `<span class="muted">${inline(it.e)}</span>` : ""}</div>`; }).join("") : `<p class="muted">Todo lo que fallaste lo acertaste en la segunda oportunidad. Volverá en unos días para fijarlo.</p>`}
+      <p class="muted" style="font-size:.85rem">Las preguntas falladas vuelven mañana en el calentamiento.</p>
+    </section>`;
+  setDock(`<button class="btn" data-act="home">Continuar</button>`);
+  typeset(root); window.scrollTo(0, 0);
+}
+
+/* ---------- eventos ---------- */
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const act = b.dataset.act, S = state.session;
+  switch (act) {
+    case "tab": closeSheet(); state.tab = b.dataset.tab; state.view = "home"; renderTab(); break;
+    case "node": openSheet(b.dataset.tid); break;
+    case "closesheet": closeSheet(); break;
+    case "forgetcode": try { localStorage.removeItem(LS + "-codigo"); } catch (err) { /* nada */ } toast("Código olvidado en este dispositivo."); break;
+    case "toggle": { const id = b.dataset.sid; state.selected.has(id) ? state.selected.delete(id) : state.selected.add(id); renderTab(); break; }
+    case "min": state.minutes = +b.dataset.m; state.p.settings.minutes = state.minutes; touch("p"); renderTab(); break;
+    case "surprise": {
+      const ranked = state.bundle.subjects.slice().sort((a, b) => priority(b) - priority(a));
+      state.selected = new Set(ranked.slice(0, state.minutes >= 25 ? 2 : 1).map(s => s.id));
+      renderTab(); toast("Elegidas: " + [...state.selected].map(id => state.subj[id].name).join(" y "));
+      break;
+    }
+    case "start": if (state.selected.size) startSession({ sids: [...state.selected], minutes: state.minutes }); break;
+    case "startone": startSession({ sids: [b.dataset.sid], minutes: state.minutes }); break;
+    case "exam": startSession({ sids: [b.dataset.sid], minutes: state.minutes, exam: true }); break;
+    case "subject": closeSheet(); state.cur = b.dataset.sid; state.view = "subject"; renderSubject(); break;
+    case "read": closeSheet(); state.readTid = b.dataset.tid; state.view = "read"; renderRead(); break;
+    case "topic": {
+      closeSheet();
+      const tid = b.dataset.tid; const sid = state.bundle.subjects.find(s => s.topics.some(t => t.id === tid)).id;
+      startSession({ sids: [sid], minutes: state.minutes, topic: tid }); break;
+    }
+    case "home": state.view = "home"; state.session = null; renderHome(); window.scrollTo(0, 0); break;
+    case "sound": state.p.settings.sound = !state.p.settings.sound; touch("p"); renderTab(); break;
+    case "quit": if (S && S.results.length) finishSession(); else { clearInterval(tick); clearSessionLocal(); state.session = null; state.view = "home"; renderHome(); } break;
+    case "lessonnext": {
+      const step = S.steps[S.idx]; const tp = state.subj[step.sid].topics.find(x => x.id === step.tid);
+      if (step.i + 1 >= tp.lesson.length && !state.p.seen[tp.id]) { state.p.seen[tp.id] = TODAY(); addXp(step.sid, 15); S.xp += 15; touch("p"); }
+      S.idx++; saveSessionLocal(); renderStep(); break;
+    }
+    case "check": {
+      const it = state.items[S.steps[S.idx].id];
+      if (it.t === "order") checkOrder(it); else if (it.t === "open") checkOpen(it, false); else checkTyped(it);
+      break;
+    }
+    case "skipopen": checkOpen(state.items[S.steps[S.idx].id], true); break;
+    case "flip": flipFlash(); break;
+    case "fgrade": { const it = state.items[S.steps[S.idx].id]; const q = +b.dataset.q; answer(it, q >= 3, { quality: q, noFeedback: true, silent: true }); break; }
+    case "selfgrade": { const it = state.items[S.steps[S.idx].id]; const q = +b.dataset.q; S.answered = false; answer(it, q >= 4, { quality: q, noFeedback: true }); break; }
+    case "next": next(); break;
+  }
+});
+
+/* ---------- arranque ---------- */
+/* El contenido va cifrado (AES-256-CBC, PBKDF2-SHA256, formato openssl) con el código de acceso. */
+async function decryptBundle(b64, code) {
+  const raw = Uint8Array.from(atob(b64.trim()), c => c.charCodeAt(0));
+  const salt = raw.slice(8, 16), ct = raw.slice(16);
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(code), "PBKDF2", false, ["deriveBits"]);
+  const bits = new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations: 200000, hash: "SHA-256" }, base, 384));
+  const key = await crypto.subtle.importKey("raw", bits.slice(0, 32), "AES-CBC", false, ["decrypt"]);
+  const pt = await crypto.subtle.decrypt({ name: "AES-CBC", iv: bits.slice(32, 48) }, key, ct);
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+const CODE_KEY = LS + "-codigo";
+function askCode(cipher, error) {
+  root.innerHTML = `
+    <header class="top"><div class="brand"><b>Electrolingo</b><span>1º GIEIA</span></div></header>
+    <form class="card" id="gate" style="margin-top:12vh">
+      <div class="eyebrow">Acceso con código</div>
+      <h1>Escribe el código para entrar</h1>
+      <p class="muted">Te lo tiene que haber dado quien te pasó el enlace. Solo se pide la primera vez en este dispositivo.</p>
+      <input class="field" id="code" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Código de acceso" aria-label="Código de acceso">
+      ${error ? `<p style="color:var(--bad);font-weight:700">${esc(error)}</p>` : ""}
+      <button class="btn" type="submit" id="gate-btn">Entrar</button>
+    </form>`;
+  setDock("");
+  const inp = $("#code"); setTimeout(() => inp.focus(), 50);
+  $("#gate").addEventListener("submit", async e => {
+    e.preventDefault();
+    const code = inp.value.trim().toLowerCase(); if (!code) return;
+    const btn = $("#gate-btn"); btn.disabled = true; btn.textContent = "Comprobando…";
+    try {
+      const bundle = await decryptBundle(cipher, code);
+      try { localStorage.setItem(CODE_KEY, code); } catch (err) { /* sin almacenamiento */ }
+      start(bundle);
+    } catch (err) { askCode(cipher, "Ese código no es correcto. Revísalo y vuelve a probar."); }
+  });
+}
+async function boot() {
+  let cipher;
+  try {
+    const r = await fetch("data/contenido.txt", { cache: "no-cache" });
+    if (!r.ok) throw new Error(r.status);
+    cipher = await r.text();
+  } catch (e) {
+    root.innerHTML = `<div class="card"><h2>No se pudo cargar el contenido</h2><p class="muted">Comprueba la conexión y recarga la página.</p></div>`;
+    return;
+  }
+  let saved = null;
+  try { saved = localStorage.getItem(CODE_KEY); } catch (e) { /* nada */ }
+  if (saved) {
+    try { return start(await decryptBundle(cipher, saved)); }
+    catch (e) { try { localStorage.removeItem(CODE_KEY); } catch (err) { /* nada */ } return askCode(cipher, "El código de acceso ha cambiado. Escribe el nuevo."); }
+  }
+  askCode(cipher, "");
+}
+function start(bundle) {
+  state.bundle = bundle;
+  for (const s of bundle.subjects) {
+    state.subj[s.id] = s;
+    for (const tp of s.topics) for (const it of tp.items) state.items[it.id] = it;
+  }
+  const saved = lsRead();
+  state.p = mergeProgress(saved?.p || {});
+  for (const s of bundle.subjects) state.srs[s.id] = Object.assign({ updated: 0, items: {} }, saved?.srs?.[s.id] || {});
+  state.minutes = state.p.settings.minutes || 25;
+  // por defecto, preselecciona la asignatura con más prioridad
+  const top = bundle.subjects.slice().sort((a, b) => priority(b) - priority(a))[0];
+  if (top) state.selected.add(top.id);
+  // sesión a medias de hoy
+  try {
+    const ss = JSON.parse(localStorage.getItem(LS + "-sess") || "null");
+    if (ss && ss.savedDay === TODAY() && ss.idx < ss.steps.length && ss.steps.every(x => x.k === "lesson" || state.items[x.id])) {
+      ss.retried = new Set(ss.retried); state.pendingSession = ss;
+    }
+  } catch (e) { /* nada */ }
+  renderHome();
+  connectCloud();
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  if (b.dataset.act === "resume" && state.pendingSession) { state.session = state.pendingSession; state.pendingSession = null; state.view = "session"; startTimer(); renderStep(); }
+  if (b.dataset.act === "discard") { state.pendingSession = null; clearSessionLocal(); renderHome(); }
+});
+boot();
+})();
+</script>
+</body></html>
