@@ -153,6 +153,45 @@ code, .code-font { font-family: var(--f-mono); }
 .seg button { border: 2px solid var(--line); background: var(--surface); border-radius: 14px; padding: 10px 4px; font: 900 .95rem var(--f-ui); color: var(--ink-2); box-shadow: 0 3px 0 var(--line); margin-bottom: 3px; }
 .seg button[aria-pressed="true"] { border-color: var(--sel); background: var(--sel-bg); color: var(--sel); box-shadow: 0 3px 0 var(--sel); }
 
+/* test diario */
+.daily { --c1: #1cb0f6; --c2: #8b5cf6; --cd: #5b3bc4; position: relative; overflow: hidden; isolation: isolate; border-radius: 24px; padding: 20px 18px 18px; color: #fff;
+  background: linear-gradient(145deg, var(--c1) 0%, var(--c2) 100%); box-shadow: 0 6px 0 var(--cd); display: grid; gap: 14px; margin-bottom: 6px; }
+.daily::before, .daily::after { content: ""; position: absolute; z-index: -1; border-radius: 50%; background: rgb(255 255 255 / .12); }
+.daily::before { width: 220px; height: 220px; right: -70px; top: -90px; }
+.daily::after { width: 130px; height: 130px; left: -50px; bottom: -60px; background: rgb(255 255 255 / .08); }
+.daily.done { --c1: #ffc800; --c2: #ff9600; --cd: #d97a00; }
+.daily .eyebrow { color: rgb(255 255 255 / .85); }
+.daily h2 { font-size: 1.65rem; }
+.daily p { font-weight: 700; color: rgb(255 255 255 / .92); }
+.daily-head { display: flex; gap: 14px; align-items: center; }
+.daily-ico { width: 68px; height: 68px; flex: none; border-radius: 22px; background: rgb(255 255 255 / .22); display: grid; place-items: center; box-shadow: inset 0 -4px 0 rgb(0 0 0 / .1); animation: hop 2.6s ease-in-out infinite; }
+.daily-ico svg { width: 40px; height: 40px; color: #ffe066; filter: drop-shadow(0 3px 0 rgb(0 0 0 / .18)); }
+.daily.done .daily-ico svg { color: #fff; }
+@keyframes hop { 0%, 70%, 100% { transform: translateY(0) rotate(0); } 78% { transform: translateY(-6px) rotate(-6deg); } 86% { transform: translateY(0) rotate(4deg); } }
+.daily-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.daily-subj { display: flex; }
+.daily-subj span { width: 32px; height: 32px; border-radius: 50%; background: var(--c); color: #fff; display: grid; place-items: center; border: 3px solid #fff; margin-right: -8px; }
+.daily-subj span svg { width: 16px; height: 16px; }
+.daily-tag { margin-left: 12px; font: 800 .78rem/1 var(--f-ui); padding: 7px 10px; border-radius: 99px; background: rgb(255 255 255 / .22); }
+.dseg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.dseg button { border: 2px solid rgb(255 255 255 / .5); background: rgb(255 255 255 / .14); color: #fff; border-radius: 16px; padding: 10px 4px 8px; display: grid; justify-items: center; gap: 2px; box-shadow: 0 4px 0 rgb(0 0 0 / .14); margin-bottom: 4px; transition: transform .06s; }
+.dseg button b { font: 900 1.7rem/1 var(--f-ui); }
+.dseg button span { font: 800 .72rem/1 var(--f-ui); text-transform: uppercase; letter-spacing: .06em; opacity: .9; }
+.dseg button[aria-pressed="true"] { background: #fff; color: var(--c2); border-color: #fff; transform: translateY(-2px); box-shadow: 0 6px 0 rgb(0 0 0 / .18); }
+.daily .daily-go { --c: #fff; --cd: rgb(0 0 0 / .2); color: var(--c2); font-size: 1.1rem; min-height: 58px; position: relative; overflow: hidden; }
+.daily .daily-go::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; background: linear-gradient(100deg, transparent, rgb(139 92 246 / .18), transparent); animation: shine 3.2s ease-in-out infinite; }
+@keyframes shine { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+.daily-score { display: flex; gap: 10px; }
+.daily-score div { flex: 1; text-align: center; border-radius: 14px; background: rgb(255 255 255 / .22); padding: 10px 4px; }
+.daily-score b { display: block; font: 900 1.4rem/1.1 var(--f-ui); }
+.daily-score span { font: 800 .68rem/1 var(--f-ui); text-transform: uppercase; letter-spacing: .06em; }
+.random { --c: var(--mat); border-color: color-mix(in srgb, var(--c) 45%, var(--line)); box-shadow: 0 4px 0 color-mix(in srgb, var(--c) 45%, var(--line)); margin-bottom: 4px; }
+.random-head { display: flex; gap: 12px; align-items: center; }
+.random-ico { width: 48px; height: 48px; flex: none; border-radius: 15px; background: var(--c); color: #fff; display: grid; place-items: center; box-shadow: 0 4px 0 color-mix(in srgb, var(--c) 72%, #000); }
+.random-ico svg { width: 28px; height: 28px; }
+.rseg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.rseg .btn { --c: var(--mat); padding: 12px 4px; }
+
 /* asignaturas */
 .subj-list { display: grid; gap: 14px; }
 .subj-card { --c: var(--sel); display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; align-items: center; width: 100%; text-align: left;
@@ -344,6 +383,7 @@ const dayNum = (d = new Date()) => Math.floor(Date.UTC(d.getFullYear(), d.getMon
 const dayKey = n => { const d = new Date(n * 864e5); return d.toISOString().slice(0, 10); };
 const TODAY = () => dayNum();
 const WD = ["D", "L", "M", "X", "J", "V", "S"];
+const WEEKDAYS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 const MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
 const norm = s => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim();
 const ICON = {
@@ -430,10 +470,10 @@ function beep(ok) {
 const LS = "pulso-gieia-v1";
 const state = {
   bundle: null, subj: {}, items: {}, p: null, srs: {}, db: null, uid: null, sample: undefined,
-  sync: "local", selected: new Set(), minutes: 25, view: "home", session: null, dirty: new Set(),
+  sync: "local", minutes: 25, quizMin: 10, view: "home", session: null, dirty: new Set(),
 };
 function freshProgress() {
-  return { updated: 0, xp: 0, streak: 0, best: 0, lastDay: null, freezes: 0, days: {}, seen: {}, sxp: {}, settings: { sound: true, minutes: 25 } };
+  return { updated: 0, xp: 0, streak: 0, best: 0, lastDay: null, freezes: 0, days: {}, seen: {}, sxp: {}, settings: { sound: true, minutes: 25, quiz: 10 } };
 }
 function lsRead() { try { return JSON.parse(localStorage.getItem(LS) || "null"); } catch (e) { return null; } }
 function lsWrite() { try { localStorage.setItem(LS, JSON.stringify({ p: state.p, srs: state.srs })); } catch (e) { /* lleno o bloqueado */ } }
@@ -655,6 +695,39 @@ function buildSession({ sids, minutes, exam = false, topic = null }) {
     results: [], retried: new Set(), xp: 0, answered: false, dayMarked: false,
   };
 }
+// tests de solo preguntas (sin lecciones ni respuestas abiertas), mezclando asignaturas
+const QUIZ_T = new Set(["mc", "tf", "fill", "num", "match", "order", "sort", "bug"]);
+function quizTopics(s) { const seen = s.topics.filter(tp => state.p.seen[tp.id]); return seen.length ? seen : s.topics.slice(0, 1); }
+function buildQuiz({ kind, minutes }) {
+  const secs = minutes * 60, steps = [], used = new Set(); let t = 0;
+  const push = (sid, it) => { steps.push({ k: "item", phase: kind, sid, id: it.id }); used.add(it.id); t += est(it); };
+  const subs = state.bundle.subjects.filter(s => s.topics.length);
+  if (kind === "daily") {
+    // 1. repasos que tocan hoy, los más atrasados primero
+    const due = subs.flatMap(s => dueItems(s.id).filter(id => QUIZ_T.has(state.items[id].t)).map(id => ({ sid: s.id, id, d: srsOf(s.id)[id][0] })));
+    for (const x of shuffle(due).sort((a, b) => a.d - b.d)) { const it = state.items[x.id]; if (t + est(it) <= secs * 0.45) push(x.sid, it); }
+    // 2. resto ponderado: lo flojo pesa más y las asignaturas con prioridad (examen cerca, días sin tocar) también
+    const pool = [], today = TODAY();
+    for (const s of subs) {
+      const st = srsOf(s.id), f = 1 + priority(s) / 10;
+      for (const tp of quizTopics(s)) for (const it of tp.items) {
+        if (used.has(it.id) || !QUIZ_T.has(it.t)) continue;
+        const x = st[it.id];
+        const w = !x ? 2 : x[4] > 0 && x[3] < 2 ? 3.2 : x[2] < 220 ? 2.4 : x[0] <= today ? 2 : 0.6;
+        pool.push({ sid: s.id, it, w: w * f });
+      }
+    }
+    while (t < secs * 0.9 && pool.length) { const { sid, it } = pool.splice(pickWeighted(pool), 1)[0]; push(sid, it); }
+  } else {
+    // aleatorio: se va turnando entre asignaturas para que salgan varias
+    const lists = shuffle(subs.map(s => shuffle(quizTopics(s).flatMap(tp => tp.items.filter(it => QUIZ_T.has(it.t)))).map(it => ({ sid: s.id, it }))).filter(l => l.length));
+    for (let k = 0; t < secs * 0.9 && lists.some(l => l.length); k++) { const l = lists[k % lists.length]; if (l.length) { const { sid, it } = l.pop(); push(sid, it); } }
+  }
+  return {
+    steps: shuffle(steps), idx: 0, sids: [...new Set(steps.map(x => x.sid))], minutes, kind, exam: false, topic: null, budget: secs, elapsed: 0, perSubj: {}, started: Date.now(),
+    results: [], retried: new Set(), xp: 0, answered: false, dayMarked: false,
+  };
+}
 
 /* ---------- vistas ---------- */
 const root = $("#root"), dock = $("#dock"), dockIn = $("#dock-in"), tabbar = $("#tabbar");
@@ -746,11 +819,13 @@ function ringSvg(frac, color) {
 }
 function renderToday() {
   const t = TODAY(), L = state.p.days[dayKey(t)] || { m: 0 }, goal = state.p.settings.minutes || 25, stk = displayStreak();
-  const mins = Math.floor(L.m / 60), n = state.selected.size;
+  const mins = Math.floor(L.m / 60);
   const pend = state.pendingSession;
   root.innerHTML = topBar() + `
     ${pend ? `<section class="card"><h3>Tienes una sesión a medias</h3><p class="muted">Puedes seguir por donde la dejaste.</p>
       <div style="display:flex;gap:10px"><button class="btn secondary" data-act="discard">Descartar</button><button class="btn" data-act="resume">Continuar</button></div></section>` : ""}
+    ${dailyCard(L)}
+    ${L.dq ? randomCard("Test aleatorio", "Sigue practicando con preguntas al azar de varias asignaturas.") : ""}
     <section class="card goal">
       <div class="ring">${ringSvg(L.m / (goal * 60), mins >= goal ? "var(--gold)" : "var(--ok)")}<div class="num"><span>${mins}<small>de ${goal} min</small></span></div></div>
       <div style="display:grid;gap:4px">
@@ -758,16 +833,40 @@ function renderToday() {
         <p class="muted">${stk.n ? `Racha de ${stk.n} día${stk.n === 1 ? "" : "s"}.` : "Empieza hoy una racha."} ${stk.risk && L.m < 600 ? "Estudia 10 minutos para no perderla." : state.p.freezes ? `${state.p.freezes} congelador${state.p.freezes > 1 ? "es" : ""} guardado${state.p.freezes > 1 ? "s" : ""}.` : ""}</p>
       </div>
     </section>
-    ${examCard()}
-    <section class="card">
-      <div class="section-head"><h2>¿Qué estudias hoy?</h2><button class="linkbtn" data-act="surprise">Sorpréndeme</button></div>
-      <div class="chips">${state.bundle.subjects.map(s => `<button class="pick" style="--c:${sc(s.id)}" data-act="toggle" data-sid="${s.id}" aria-pressed="${state.selected.has(s.id)}"><span class="ico">${SUBJ_ICON[s.id] || ""}</span>${esc(s.name)}</button>`).join("")}</div>
-      <div class="eyebrow">Duración</div>
-      <div class="seg" role="group" aria-label="Duración">${[10, 25, 40].map(m => `<button data-act="min" data-m="${m}" aria-pressed="${state.minutes === m}">${m} min</button>`).join("")}</div>
-      <p class="muted" style="font-size:.85rem">${n > 1 ? "El tiempo se reparte según repasos pendientes, días sin tocar y exámenes cercanos." : "Repaso, lección nueva, práctica y un mini test al final."}</p>
-      <button class="btn" data-act="start" ${n ? "" : "disabled"}>${n ? `Empezar · ${state.minutes} min` : "Elige una asignatura"}</button>
-    </section>`;
+    ${examCard()}`;
   window.scrollTo(0, 0);
+}
+function dailyCard(L) {
+  const d = new Date(), date = `${WEEKDAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  if (L.dq) {
+    const q = L.dq;
+    return `<section class="daily done">
+      <div class="daily-head"><span class="daily-ico">${UI_ICON.check}</span>
+        <div><div class="eyebrow">Test diario · ${date}</div><h2>¡Hecho por hoy!</h2></div></div>
+      <div class="daily-score"><div><b>${q.c}/${q.n}</b><span>aciertos</span></div><div><b>+${q.x}</b><span>XP</span></div></div>
+      <p>Mañana tendrás un test nuevo. Mientras, puedes seguir con tests aleatorios.</p>
+    </section>`;
+  }
+  const subs = state.bundle.subjects.filter(s => s.topics.length);
+  const due = subs.reduce((a, s) => a + dueItems(s.id).filter(id => QUIZ_T.has(state.items[id].t)).length, 0);
+  const ex = (state.bundle.exams || []).filter(e => e.subject && state.subj[e.subject] && examDays(e) >= 0 && examDays(e) <= 14).sort((a, b) => a.date.localeCompare(b.date))[0];
+  const why = ex ? `Primero lo que toca repasar, con más peso para ${esc(state.subj[ex.subject].name)} por su examen.` : "Primero lo que toca repasar, luego lo que llevas más flojo.";
+  return `<section class="daily">
+    <div class="daily-head"><span class="daily-ico">${UI_ICON.bolt}</span>
+      <div><div class="eyebrow">Test diario · ${date}</div><h2>Tu test de hoy</h2></div></div>
+    <p>Preguntas de todas tus asignaturas. ${why}</p>
+    <div class="daily-meta"><span class="daily-subj">${subs.map(s => `<span style="--c:${sc(s.id)}" title="${esc(s.name)}">${SUBJ_ICON[s.id] || ""}</span>`).join("")}</span>
+      ${due ? `<span class="daily-tag">${due} repaso${due > 1 ? "s" : ""} pendiente${due > 1 ? "s" : ""}</span>` : ""}</div>
+    <div class="dseg" role="group" aria-label="Duración del test">${[5, 10, 15].map(m => `<button data-act="qmin" data-m="${m}" aria-label="${m} minutos" aria-pressed="${state.quizMin === m}"><b>${m}</b><span>min</span></button>`).join("")}</div>
+    <button class="btn daily-go" data-act="daily">Empezar test · ${state.quizMin} min</button>
+  </section>`;
+}
+const DICE = '<svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6 3h12a3 3 0 013 3v12a3 3 0 01-3 3H6a3 3 0 01-3-3V6a3 3 0 013-3zm2 3.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm8 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm-4 4a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm-4 4a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm8 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/></svg>';
+function randomCard(title, text) {
+  return `<section class="card random">
+    <div class="random-head"><span class="random-ico">${DICE}</span><div><h2>${title}</h2><p class="muted" style="font-size:.9rem">${text}</p></div></div>
+    <div class="rseg">${[5, 10, 15].map(m => `<button class="btn sub" data-act="random" data-m="${m}">${m} min</button>`).join("")}</div>
+  </section>`;
 }
 function renderSubjects() {
   const t = TODAY();
@@ -945,10 +1044,10 @@ function startTimer() {
 }
 function fmtClock(s) { s = Math.round(s); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
 function currentSid() { const S = state.session; const st = S.steps[Math.min(S.idx, S.steps.length - 1)]; return st ? st.sid : S.sids[0]; }
-const PHASE = { review: "Calentamiento · repaso", lesson: "Lección nueva", practice: "Práctica", retry: "Segunda oportunidad", test: "Mini test final" };
+const PHASE = { review: "Calentamiento · repaso", lesson: "Lección nueva", practice: "Práctica", retry: "Segunda oportunidad", test: "Mini test final", daily: "Test diario", random: "Test aleatorio" };
 
 function startSession(opts) {
-  const S = buildSession(opts);
+  const S = opts.kind ? buildQuiz(opts) : buildSession(opts);
   if (!S.steps.length) { toast("No hay ejercicios disponibles para esa selección."); return; }
   state.session = S; state.view = "session";
   startTimer(); renderStep();
@@ -1236,6 +1335,11 @@ function finishSession() {
   clearInterval(tick);
   if (!S.dayMarked && S.results.length >= 5) S.dayMarked = markStudyDay();
   for (const sid of S.sids) { /* lecciones vistas ya se marcan al pasar */ }
+  // el test diario cuenta como hecho si se termina o se agota el tiempo, no si se abandona
+  if (S.kind === "daily" && (S.idx >= S.steps.length || S.elapsed >= S.budget)) {
+    const L = todayLog(), first = S.results.filter(r => r.phase !== "retry");
+    if (!L.dq) L.dq = { n: first.length, c: first.filter(r => r.ok).length, x: S.xp };
+  }
   touch("p"); flush(); clearSessionLocal();
   state.view = "end"; renderEnd();
 }
@@ -1248,7 +1352,7 @@ function renderEnd() {
   setNav(false);
   root.innerHTML = `<section class="end-hero">
       <span class="burst" style="color:var(--gold)">${UI_ICON.trophy}</span>
-      <h1>¡Sesión completada!</h1>
+      <h1>${S.kind === "daily" ? "¡Test diario completado!" : S.kind ? "¡Test completado!" : "¡Sesión completada!"}</h1>
       <p class="muted">Racha de ${stk.n} día${stk.n === 1 ? "" : "s"}</p>
     </section>
     <div class="stats3">
@@ -1256,6 +1360,7 @@ function renderEnd() {
       <div class="stat" style="--c:var(--ok)"><span>Aciertos</span><b>${n ? Math.round(c / n * 100) : 0}%</b></div>
       <div class="stat" style="--c:var(--sel)"><span>Minutos</span><b>${mins}′</b></div>
     </div>
+    ${S.kind ? randomCard("¿Otro test?", "Preguntas al azar de varias asignaturas.") : ""}
     ${Object.keys(S.perSubj).length > 1 ? `<section class="card"><h2>Reparto del tiempo</h2><div class="legend">${Object.entries(S.perSubj).map(([sid, sec]) => `<span style="--sc:${sc(sid)}"><i></i>${esc(state.subj[sid].name)} <span class="mono">${Math.round(sec / 60)}′</span></span>`).join("")}</div></section>` : ""}
     <section class="card"><h2>${misses.length ? "Para repasar" : "Sin fallos pendientes"}</h2>
       ${misses.length ? misses.map(r => { const it = state.items[r.id]; return `<div class="miss" style="--sc:${sc(r.sid)}"><span class="eyebrow">${esc(state.subj[r.sid].name)}</span><b>${inline(it.q || it.f)}</b>${it.e ? `<span class="muted">${inline(it.e)}</span>` : ""}</div>`; }).join("") : `<p class="muted">Todo lo que fallaste lo acertaste en la segunda oportunidad. Volverá en unos días para fijarlo.</p>`}
@@ -1274,15 +1379,10 @@ document.addEventListener("click", e => {
     case "node": openSheet(b.dataset.tid); break;
     case "closesheet": closeSheet(); break;
     case "forgetcode": try { localStorage.removeItem(LS + "-codigo"); } catch (err) { /* nada */ } toast("Código olvidado en este dispositivo."); break;
-    case "toggle": { const id = b.dataset.sid; state.selected.has(id) ? state.selected.delete(id) : state.selected.add(id); renderTab(); break; }
     case "min": state.minutes = +b.dataset.m; state.p.settings.minutes = state.minutes; touch("p"); renderTab(); break;
-    case "surprise": {
-      const ranked = state.bundle.subjects.slice().sort((a, b) => priority(b) - priority(a));
-      state.selected = new Set(ranked.slice(0, state.minutes >= 25 ? 2 : 1).map(s => s.id));
-      renderTab(); toast("Elegidas: " + [...state.selected].map(id => state.subj[id].name).join(" y "));
-      break;
-    }
-    case "start": if (state.selected.size) startSession({ sids: [...state.selected], minutes: state.minutes }); break;
+    case "qmin": state.quizMin = +b.dataset.m; state.p.settings.quiz = state.quizMin; touch("p"); renderTab(); break;
+    case "daily": startSession({ kind: "daily", minutes: state.quizMin }); break;
+    case "random": startSession({ kind: "random", minutes: +b.dataset.m }); break;
     case "startone": startSession({ sids: [b.dataset.sid], minutes: state.minutes }); break;
     case "exam": startSession({ sids: [b.dataset.sid], minutes: state.minutes, exam: true }); break;
     case "subject": closeSheet(); state.cur = b.dataset.sid; state.view = "subject"; renderSubject(); break;
@@ -1377,9 +1477,7 @@ function start(bundle) {
   state.p = mergeProgress(saved?.p || {});
   for (const s of bundle.subjects) state.srs[s.id] = Object.assign({ updated: 0, items: {} }, saved?.srs?.[s.id] || {});
   state.minutes = state.p.settings.minutes || 25;
-  // por defecto, preselecciona la asignatura con más prioridad
-  const top = bundle.subjects.slice().sort((a, b) => priority(b) - priority(a))[0];
-  if (top) state.selected.add(top.id);
+  state.quizMin = state.p.settings.quiz || 10;
   // sesión a medias de hoy
   try {
     const ss = JSON.parse(localStorage.getItem(LS + "-sess") || "null");
